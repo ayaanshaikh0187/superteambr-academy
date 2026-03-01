@@ -6,6 +6,7 @@ import { Trophy, Medal, Zap, TrendingUp } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useLeaderboard } from "@/hooks/useLeaderboard";
 import type { LeaderboardEntry, LeaderboardPeriod } from "@/types";
+import { SpotlightCard } from "@/components/ui/spotlight-card";
 
 const RANK_MEDAL: Record<
   number,
@@ -18,16 +19,18 @@ const RANK_MEDAL: Record<
 
 function EmptyLeaderboard({ message }: { message: string }) {
   return (
-    <div
-      className="rounded-xl p-6 text-sm"
-      style={{
-        background: "var(--bg-surface)",
-        border: "1px solid var(--border-subtle)",
-        color: "var(--text-secondary)",
-      }}
-    >
-      {message}
-    </div>
+    <SpotlightCard className="rounded-xl" spotlightColor="rgba(153, 69, 255, 0.18)">
+      <div
+        className="rounded-xl p-6 text-sm"
+        style={{
+          background: "var(--bg-surface)",
+          border: "1px solid var(--border-subtle)",
+          color: "var(--text-secondary)",
+        }}
+      >
+        {message}
+      </div>
+    </SpotlightCard>
   );
 }
 
@@ -139,14 +142,15 @@ export default function LeaderboardPage() {
       )}
 
       {myEntry && (
-        <div
-          className="rounded-xl p-4 mb-6 flex items-center justify-between"
-          style={{
-            background:
-              "linear-gradient(135deg, rgba(153,69,255,0.12) 0%, rgba(25,251,155,0.05) 100%)",
-            border: "1px solid rgba(153,69,255,0.25)",
-          }}
-        >
+        <SpotlightCard className="rounded-xl mb-6" spotlightColor="rgba(153, 69, 255, 0.22)">
+          <div
+            className="rounded-xl p-4 flex items-center justify-between"
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(153,69,255,0.12) 0%, rgba(25,251,155,0.05) 100%)",
+              border: "1px solid rgba(153,69,255,0.25)",
+            }}
+          >
           <div className="flex items-center gap-3">
             <div
               className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold"
@@ -182,20 +186,23 @@ export default function LeaderboardPage() {
               {myEntry.xp.toLocaleString("en-US")} XP
             </span>
           </div>
-        </div>
+          </div>
+        </SpotlightCard>
       )}
 
       {isLoading ? (
-        <div
-          className="rounded-xl p-6 text-sm"
-          style={{
-            background: "var(--bg-surface)",
-            border: "1px solid var(--border-subtle)",
-            color: "var(--text-secondary)",
-          }}
-        >
-          {t("loading")}
-        </div>
+        <SpotlightCard className="rounded-xl" spotlightColor="rgba(153, 69, 255, 0.18)">
+          <div
+            className="rounded-xl p-6 text-sm"
+            style={{
+              background: "var(--bg-surface)",
+              border: "1px solid var(--border-subtle)",
+              color: "var(--text-secondary)",
+            }}
+          >
+            {t("loading")}
+          </div>
+        </SpotlightCard>
       ) : entries.length === 0 ? (
         <EmptyLeaderboard message={t("empty")} />
       ) : (
@@ -254,13 +261,14 @@ export default function LeaderboardPage() {
             })}
           </div>
 
-          <div
-            className="rounded-xl overflow-hidden"
-            style={{
-              background: "var(--bg-surface)",
-              border: "1px solid var(--border-subtle)",
-            }}
-          >
+          <SpotlightCard className="rounded-xl" spotlightColor="rgba(153, 69, 255, 0.18)">
+            <div
+              className="rounded-xl overflow-hidden"
+              style={{
+                background: "var(--bg-surface)",
+                border: "1px solid var(--border-subtle)",
+              }}
+            >
             <table className="w-full border-collapse">
               <thead>
                 <tr
@@ -341,7 +349,8 @@ export default function LeaderboardPage() {
               <TrendingUp size={14} aria-hidden="true" />
               <span className="text-xs">{t("dataSource")}</span>
             </div>
-          </div>
+            </div>
+          </SpotlightCard>
         </>
       )}
     </div>

@@ -19,6 +19,7 @@ import { CourseCardSkeleton } from "@/components/Skeleton";
 import { ErrorBanner } from "@/components/ErrorBanner";
 import { EmptyState } from "@/components/EmptyState";
 import { Input } from "@/components/ui/input";
+import { SpotlightCard } from "@/components/ui/spotlight-card";
 
 const DIFFICULTY_KEYS: Record<number, string> = {
   0: "filters.all",
@@ -156,117 +157,120 @@ function CourseCard({
     : t("card.cta.start");
 
   return (
-    <Link
-      href={`/courses/${course.courseId}`}
-      prefetch={false}
-      className="group block rounded-xl p-5 transition-all duration-200 focus-visible:outline-none"
-      style={{
-        background: "var(--bg-surface)",
-        border: "1px solid var(--border-subtle)",
-        boxShadow: "var(--shadow-card)",
-      }}
-      onMouseEnter={(e) => {
-        const el = e.currentTarget as HTMLElement;
-        el.style.borderColor = "var(--border-purple)";
-        el.style.boxShadow = "var(--shadow-card-hover)";
-        el.style.transform = "translateY(-2px)";
-      }}
-      onMouseLeave={(e) => {
-        const el = e.currentTarget as HTMLElement;
-        el.style.borderColor = "var(--border-subtle)";
-        el.style.boxShadow = "var(--shadow-card)";
-        el.style.transform = "translateY(0)";
-      }}
-    >
-      <div className="flex items-start justify-between gap-3 mb-3">
-        <div className="min-w-0">
-          <h2
-            className="font-semibold text-base leading-snug mb-1.5 truncate"
-            style={{ color: "var(--text-primary)" }}
-          >
-            {course.courseId}
-          </h2>
-          <DifficultyBadge difficulty={course.difficulty} source={source} />
-        </div>
-        {isFinalized ? (
-          <span
-            className="shrink-0 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium"
-            style={{
-              color: "var(--solana-green)",
-              background: "rgba(25,251,155,0.1)",
-              border: "1px solid rgba(25,251,155,0.3)",
-            }}
-          >
-            {t("card.status.done")}
-          </span>
-        ) : isEnrolled ? (
-          <span
-            className="shrink-0 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
-            style={{
-              color: "var(--text-purple)",
-              background: "rgba(153,69,255,0.1)",
-              border: "1px solid rgba(153,69,255,0.25)",
-            }}
-          >
-            {t("card.status.enrolled")}
-          </span>
-        ) : null}
-      </div>
-
-      <div
-        className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs mb-4"
-        style={{ color: "var(--text-muted)" }}
+    <SpotlightCard className="rounded-xl" spotlightColor="rgba(153, 69, 255, 0.2)">
+      <Link
+        href={`/courses/${course.courseId}`}
+        prefetch={false}
+        className="group block rounded-xl p-5 transition-all duration-200 focus-visible:outline-none hover:-translate-y-0.5"
+        style={{
+          background: "var(--bg-surface)",
+          border: "1px solid var(--border-subtle)",
+          boxShadow: "var(--shadow-card)",
+        }}
+        onMouseEnter={(e) => {
+          const el = e.currentTarget as HTMLElement;
+          el.style.borderColor = "var(--border-purple)";
+          el.style.boxShadow = "var(--shadow-card-hover)";
+          el.style.background =
+            "linear-gradient(135deg, rgba(153,69,255,0.12) 0%, rgba(25,251,155,0.08) 55%, rgba(0,140,76,0.1) 100%)";
+        }}
+        onMouseLeave={(e) => {
+          const el = e.currentTarget as HTMLElement;
+          el.style.borderColor = "var(--border-subtle)";
+          el.style.boxShadow = "var(--shadow-card)";
+          el.style.background = "var(--bg-surface)";
+        }}
       >
-        <span>{t("card.meta.lessons", { count: course.lessonCount })}</span>
-        <span aria-hidden="true">|</span>
-        <span style={{ color: "var(--text-purple)" }}>
-          {t("card.meta.xpPerLesson", { xp: course.xpPerLesson })}
-        </span>
-        <span aria-hidden="true">|</span>
-        <span>{t("card.meta.track", { track: course.trackId })}</span>
-      </div>
+        <div className="flex items-start justify-between gap-3 mb-3">
+          <div className="min-w-0">
+            <h2
+              className="font-semibold text-base leading-snug mb-1.5 truncate"
+              style={{ color: "var(--text-primary)" }}
+            >
+              {course.courseId}
+            </h2>
+            <DifficultyBadge difficulty={course.difficulty} source={source} />
+          </div>
+          {isFinalized ? (
+            <span
+              className="shrink-0 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium"
+              style={{
+                color: "var(--solana-green)",
+                background: "rgba(25,251,155,0.1)",
+                border: "1px solid rgba(25,251,155,0.3)",
+              }}
+            >
+              {t("card.status.done")}
+            </span>
+          ) : isEnrolled ? (
+            <span
+              className="shrink-0 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
+              style={{
+                color: "var(--text-purple)",
+                background: "rgba(153,69,255,0.1)",
+                border: "1px solid rgba(153,69,255,0.25)",
+              }}
+            >
+              {t("card.status.enrolled")}
+            </span>
+          ) : null}
+        </div>
 
-      {isEnrolled && !isFinalized && (
-        <div>
-          <div
-            className="flex justify-between text-xs mb-1.5"
-            style={{ color: "var(--text-muted)" }}
-          >
-            <span>{t("card.progress.label")}</span>
-            <span>
-              {completed}/{course.lessonCount}
+        <div
+          className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs mb-4"
+          style={{ color: "var(--text-muted)" }}
+        >
+          <span>{t("card.meta.lessons", { count: course.lessonCount })}</span>
+          <span aria-hidden="true">|</span>
+          <span style={{ color: "var(--text-purple)" }}>
+            {t("card.meta.xpPerLesson", { xp: course.xpPerLesson })}
+          </span>
+          <span aria-hidden="true">|</span>
+          <span>{t("card.meta.track", { track: course.trackId })}</span>
+        </div>
+
+        {isEnrolled && !isFinalized && (
+          <div>
+            <div
+              className="flex justify-between text-xs mb-1.5"
+              style={{ color: "var(--text-muted)" }}
+            >
+              <span>{t("card.progress.label")}</span>
+              <span>
+                {completed}/{course.lessonCount}
+              </span>
+            </div>
+            <div
+              className="h-1.5 rounded-full overflow-hidden"
+              style={{ background: "var(--bg-elevated)" }}
+            >
+              <div
+                className="h-full rounded-full transition-all duration-500"
+                style={{
+                  width: `${progressPct}%`,
+                  background:
+                    "linear-gradient(90deg, var(--solana-purple), var(--solana-green))",
+                }}
+              />
+            </div>
+          </div>
+        )}
+
+        {!isEnrolled && (
+          <div className="flex items-center justify-between pt-1">
+            <span
+              className="text-xs font-medium"
+              style={{ color: "var(--text-purple)" }}
+            >
+              {t("card.cta.totalXp", { xp: course.lessonCount * course.xpPerLesson })}
+            </span>
+            <span className="text-xs" style={{ color: "var(--text-muted)" }}>
+              {ctaLabel}
             </span>
           </div>
-          <div
-            className="h-1.5 rounded-full overflow-hidden"
-            style={{ background: "var(--bg-elevated)" }}
-          >
-            <div
-              className="h-full rounded-full transition-all duration-500"
-              style={{
-                width: `${progressPct}%`,
-                background:
-                  "linear-gradient(90deg, var(--solana-purple), var(--solana-green))",
-              }}
-            />
-          </div>
-        </div>
-      )}
-
-      {!isEnrolled && (
-        <div className="flex items-center justify-between pt-1">
-          <span
-            className="text-xs font-medium"
-            style={{ color: "var(--text-purple)" }}
-          >
-            {t("card.cta.totalXp", { xp: course.lessonCount * course.xpPerLesson })}
-          </span>
-          <span className="text-xs" style={{ color: "var(--text-muted)" }}>
-            {ctaLabel}
-          </span>
-        </div>
-      )}
-    </Link>
+        )}
+      </Link>
+    </SpotlightCard>
   );
 }
 

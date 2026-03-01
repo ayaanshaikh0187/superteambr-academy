@@ -20,7 +20,7 @@ const SOCIAL_LINKS = [
   },
   {
     key: "twitter",
-    href: "https://twitter.com/superteambr",
+    href: "https://x.com/superteambr",
     icon: Twitter,
   },
 ] as const;

@@ -101,20 +101,20 @@
 
 /* ── Light theme ─────────────────────────────────────────────────────── */
 :root[data-theme="light"] {
-  --bg-base:     #fafafa;
+  --bg-base:     #f7f8fb;
   --bg-surface:  #ffffff;
-  --bg-elevated: #f3f4f6;
-  --bg-overlay:  #e5e7eb;
+  --bg-elevated: #f2f4f9;
+  --bg-overlay:  #e8edf5;
 
-  --border-subtle:  rgba(0, 0, 0, 0.06);
-  --border-default: rgba(0, 0, 0, 0.12);
+  --border-subtle:  rgba(18, 26, 38, 0.08);
+  --border-default: rgba(18, 26, 38, 0.16);
   --border-strong:  rgba(0, 0, 0, 0.20);
   --border-purple:  rgba(153, 69, 255, 0.25);
   --border-green:   rgba(25, 200, 130, 0.25);
 
   --text-primary:   #0f0f16;
-  --text-secondary: #4b5563;
-  --text-muted:     #6b7280;
+  --text-secondary: #2f3e50;
+  --text-muted:     #526173;
   --text-purple:    #7c3aed;
   --text-green:     #059669;
 

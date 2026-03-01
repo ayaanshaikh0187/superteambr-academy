@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 import { useAchievements } from "@/hooks/useAchievements";
 import { AchievementGrid } from "@/components/AchievementBadge";
+import { SpotlightCard } from "@/components/ui/spotlight-card";
 import {
   getProfileBySubject,
   upsertProfile,
@@ -154,13 +155,14 @@ function SkillRadar({ t }: { t: ProfileT }) {
     pts.map((p, i) => `${i === 0 ? "M" : "L"}${p.x},${p.y}`).join(" ") + "Z";
 
   return (
-    <div
-      className="rounded-2xl p-5"
-      style={{
-        background: "var(--bg-surface)",
-        border: "1px solid var(--border-subtle)",
-      }}
-    >
+    <SpotlightCard className="rounded-2xl" spotlightColor="rgba(153, 69, 255, 0.2)">
+      <div
+        className="rounded-2xl p-5"
+        style={{
+          background: "var(--bg-surface)",
+          border: "1px solid var(--border-subtle)",
+        }}
+      >
       <div className="flex items-center justify-between mb-4">
         <p
           className="text-sm font-semibold"
@@ -253,7 +255,8 @@ function SkillRadar({ t }: { t: ProfileT }) {
           })}
         </svg>
       </div>
-    </div>
+      </div>
+    </SpotlightCard>
   );
 }
 
@@ -280,14 +283,15 @@ function XpCard({
         100;
 
   return (
-    <div
-      className="rounded-2xl p-6 mb-6 relative overflow-hidden"
-      style={{
-        background:
-          "linear-gradient(135deg, rgba(153,69,255,0.15) 0%, rgba(20,241,149,0.06) 100%)",
-        border: "1px solid rgba(153,69,255,0.3)",
-      }}
-    >
+    <SpotlightCard className="rounded-2xl mb-6" spotlightColor="rgba(153, 69, 255, 0.24)">
+      <div
+        className="rounded-2xl p-6 relative overflow-hidden"
+        style={{
+          background:
+            "linear-gradient(135deg, rgba(153,69,255,0.15) 0%, rgba(20,241,149,0.06) 100%)",
+          border: "1px solid rgba(153,69,255,0.3)",
+        }}
+      >
       <div
         className="absolute -top-8 -right-8 w-32 h-32 rounded-full pointer-events-none"
         style={{
@@ -384,7 +388,8 @@ function XpCard({
           {t("xp.demoNote")}
         </p>
       )}
-    </div>
+      </div>
+    </SpotlightCard>
   );
 }
 
@@ -493,23 +498,25 @@ export default function ProfilePage() {
   if (!connected) {
     return (
       <div className="mx-auto max-w-2xl px-4 sm:px-6 py-8 sm:py-10">
-        <div
-          className="rounded-2xl py-20 text-center"
-          style={{
-            background: "var(--bg-surface)",
-            border: "1px solid var(--border-subtle)",
-          }}
-        >
-          <p
-            className="text-lg font-medium mb-1"
-            style={{ color: "var(--text-secondary)" }}
+        <SpotlightCard className="rounded-2xl" spotlightColor="rgba(153, 69, 255, 0.2)">
+          <div
+            className="rounded-2xl py-20 text-center"
+            style={{
+              background: "var(--bg-surface)",
+              border: "1px solid var(--border-subtle)",
+            }}
           >
-            {t("empty.title")}
-          </p>
-          <p className="text-sm" style={{ color: "var(--text-muted)" }}>
-            {t("empty.description")}
-          </p>
-        </div>
+            <p
+              className="text-lg font-medium mb-1"
+              style={{ color: "var(--text-secondary)" }}
+            >
+              {t("empty.title")}
+            </p>
+            <p className="text-sm" style={{ color: "var(--text-muted)" }}>
+              {t("empty.description")}
+            </p>
+          </div>
+        </SpotlightCard>
       </div>
     );
   }
@@ -543,13 +550,14 @@ export default function ProfilePage() {
   return (
     <div className="mx-auto max-w-2xl px-4 sm:px-6 py-8 sm:py-10">
       {/* ── Profile header ───────────────────────────────────────────────── */}
-      <div
-        className="rounded-2xl p-6 mb-6 relative overflow-hidden"
-        style={{
-          background: "var(--bg-surface)",
-          border: "1px solid var(--border-subtle)",
-        }}
-      >
+      <SpotlightCard className="rounded-2xl mb-6" spotlightColor="rgba(153, 69, 255, 0.2)">
+        <div
+          className="rounded-2xl p-6 relative overflow-hidden"
+          style={{
+            background: "var(--bg-surface)",
+            border: "1px solid var(--border-subtle)",
+          }}
+        >
         {/* Background glow */}
         <div
           aria-hidden="true"
@@ -849,7 +857,8 @@ export default function ProfilePage() {
             </div>
           </div>
         )}
-      </div>
+        </div>
+      </SpotlightCard>
 
       {/* ── XP card ────────────────────────────────────────────────────────── */}
       <XpCard

@@ -131,7 +131,7 @@ export function Nav() {
   const profileHref = `/profile`;
   const settingsHref = `/settings`;
 
-  const coursesActive = isActive(coursesHref) || isActive(homeHref, true);
+  const coursesActive = isActive(coursesHref);
 
   const publicLinks = [
     { href: coursesHref, label: t("courses"), active: coursesActive },

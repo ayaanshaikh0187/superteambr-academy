@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useRef, useState } from "react";
 import { Link } from "@/i18n/routing";
@@ -16,13 +16,14 @@ import {
   Wallet,
   Trophy,
   GraduationCap,
-  Mail,
   ExternalLink,
 } from "lucide-react";
 import { Footer } from "@/components/Footer";
 import { useTranslations } from "next-intl";
+import { GridGlowBackground } from "@/components/ui/grid-glow-background";
+import { SpotlightCard } from "@/components/ui/spotlight-card";
 
-/* ── Data ────────────────────────────────────────────────────────────────── */
+/* -- Data ------------------------------------------------------------------ */
 
 const STATS = [
   { id: "activeLearners", labelKey: "stats.activeLearners", value: "500+", icon: GraduationCap },
@@ -123,34 +124,6 @@ const TESTIMONIALS = [
   },
 ];
 
-const NEWSLETTER_STORAGE_KEY = "academy_newsletter";
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-function normalizeNewsletterEmail(raw: string): string | null {
-  const normalized = raw.trim().toLowerCase();
-  if (!normalized || !EMAIL_PATTERN.test(normalized)) return null;
-  return normalized;
-}
-
-function parseNewsletterEntries(raw: string | null): Array<{ email: string; ts: number }> {
-  if (!raw) return [];
-  try {
-    const parsed = JSON.parse(raw) as unknown;
-    if (!Array.isArray(parsed)) return [];
-    return parsed.filter(
-      (item): item is { email: string; ts: number } =>
-        Boolean(
-          item &&
-            typeof item === "object" &&
-            typeof (item as { email?: unknown }).email === "string" &&
-            typeof (item as { ts?: unknown }).ts === "number",
-        ),
-    );
-  } catch {
-    return [];
-  }
-}
-
 const TECH_BADGES = [
   { id: "token2022", labelKey: "techBadges.token2022", icon: Shield },
   { id: "metaplexCore", labelKey: "techBadges.metaplexCore", icon: Award },
@@ -191,7 +164,7 @@ const ECOSYSTEM_PARTNERS = [
   { id: "token2022", nameKey: "ecosystem.token2022", emoji: "T", color: "#43b4ca" },
 ];
 
-/* ── Floating particles on the hero (purely decorative) ──────────────── */
+/* -- Floating particles on the hero (purely decorative) ---------------- */
 function FloatingParticles() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
@@ -217,7 +190,7 @@ function FloatingParticles() {
   );
 }
 
-/* ── Animated counter ──────────────────────────────────────────────────── */
+/* -- Animated counter ---------------------------------------------------- */
 function AnimatedStat({ value, label, icon: Icon }: { value: string; label: string; icon: React.ElementType }) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
@@ -261,7 +234,7 @@ function AnimatedStat({ value, label, icon: Icon }: { value: string; label: stri
   );
 }
 
-/* ── Fade-in on scroll wrapper ─────────────────────────────────────────── */
+/* -- Fade-in on scroll wrapper ------------------------------------------- */
 function FadeInSection({
   children,
   delay = 0,
@@ -301,39 +274,21 @@ function FadeInSection({
 }
 
 
-/* ── Main Landing Page ─────────────────────────────────────────────────── */
+/* -- Main Landing Page --------------------------------------------------- */
 export default function LandingPage() {
   const { connected } = useWallet();
   const t = useTranslations("Landing");
-  const [email, setEmail] = useState("");
-  const [subscribed, setSubscribed] = useState(false);
-
-  function handleNewsletter(e: React.FormEvent) {
-    e.preventDefault();
-    const normalizedEmail = normalizeNewsletterEmail(email);
-    if (!normalizedEmail) return;
-    if (typeof window !== "undefined") {
-      const existing = parseNewsletterEntries(
-        localStorage.getItem(NEWSLETTER_STORAGE_KEY),
-      );
-      const withoutDuplicates = existing.filter(
-        (entry) => entry.email !== normalizedEmail,
-      );
-      localStorage.setItem(
-        NEWSLETTER_STORAGE_KEY,
-        JSON.stringify([
-          ...withoutDuplicates,
-          { email: normalizedEmail, ts: Date.now() },
-        ]),
-      );
-    }
-    setEmail(normalizedEmail);
-    setSubscribed(true);
-  }
 
   return (
-    <div className="flex-1 flex flex-col">
-      {/* ── Hero ──────────────────────────────────────────────────────── */}
+    <div className="flex-1 w-full">
+      <GridGlowBackground
+        className="w-full"
+        backgroundColor="var(--bg-base)"
+        gridColor="rgba(255,255,255,0.055)"
+        glowCount={14}
+      >
+      <div className="flex min-h-[calc(100svh-64px)] flex-col">
+      {/* -- Hero -------------------------------------------------------- */}
       <section className="relative overflow-hidden">
         {/* Layered gradient backgrounds */}
         <div
@@ -489,29 +444,42 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Stats strip ─────────────────────────────────────────────── */}
+      {/* -- Stats strip ----------------------------------------------- */}
       <section
         className="border-y"
         style={{
           borderColor: "var(--border-subtle)",
-          background: "var(--bg-surface)",
+          background: "transparent",
         }}
       >
         <div className="mx-auto max-w-6xl px-4 sm:px-6 py-10">
           <dl className="grid grid-cols-2 sm:grid-cols-4 gap-8">
             {STATS.map((stat) => (
-              <AnimatedStat
+              <SpotlightCard
                 key={stat.id}
-                value={stat.value}
-                label={t(stat.labelKey)}
-                icon={stat.icon}
-              />
+                className="rounded-2xl"
+                spotlightColor="rgba(153, 69, 255, 0.2)"
+              >
+                <div
+                  className="rounded-2xl p-4"
+                  style={{
+                    background: "rgba(255,255,255,0.03)",
+                    border: "1px solid var(--border-subtle)",
+                  }}
+                >
+                  <AnimatedStat
+                    value={stat.value}
+                    label={t(stat.labelKey)}
+                    icon={stat.icon}
+                  />
+                </div>
+              </SpotlightCard>
             ))}
           </dl>
         </div>
       </section>
 
-      {/* ── Learning Paths ──────────────────────────────────────────── */}
+      {/* -- Learning Paths -------------------------------------------- */}
       <section className="mx-auto max-w-6xl px-4 sm:px-6 py-16 sm:py-20">
         <FadeInSection>
           <div className="text-center mb-10">
@@ -530,90 +498,92 @@ export default function LandingPage() {
         <div className="grid gap-5 sm:grid-cols-3">
           {LEARNING_PATHS.map((path, i) => (
             <FadeInSection key={path.id} delay={i * 0.1}>
-              <Link
-                href="/courses"
-                prefetch={false}
-                className="rounded-2xl p-6 transition-all duration-200 block group h-full"
-                style={{
-                  background: "var(--bg-surface)",
-                  border: "1px solid var(--border-subtle)",
-                  boxShadow: "var(--shadow-card)",
-                }}
-                onMouseEnter={(e) => {
-                  const el = e.currentTarget as HTMLElement;
-                  el.style.borderColor = "var(--border-purple)";
-                  el.style.boxShadow = "var(--shadow-card-hover)";
-                  el.style.transform = "translateY(-2px)";
-                }}
-                onMouseLeave={(e) => {
-                  const el = e.currentTarget as HTMLElement;
-                  el.style.borderColor = "var(--border-subtle)";
-                  el.style.boxShadow = "var(--shadow-card)";
-                  el.style.transform = "translateY(0)";
-                }}
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <span
-                    className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium"
-                    style={{
-                      color: path.diffColor,
-                      background: `${path.diffColor}15`,
-                      border: `1px solid ${path.diffColor}40`,
-                    }}
-                  >
-                    {t(path.difficultyKey)}
-                  </span>
-                  <span
-                    className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-medium"
-                    style={{
-                      color: "var(--text-purple)",
-                      background: "rgba(153,69,255,0.08)",
-                      border: "1px solid rgba(153,69,255,0.2)",
-                    }}
-                  >
-                    {t("common.demo")}
-                  </span>
-                </div>
-                <h3
-                  className="font-semibold text-base mb-2"
-                  style={{ color: "var(--text-primary)" }}
-                >
-                  {t(path.titleKey)}
-                </h3>
-                <p
-                  className="text-sm mb-5 leading-relaxed"
-                  style={{ color: "var(--text-secondary)" }}
-                >
-                  {t(path.descriptionKey)}
-                </p>
-                <div
-                  className="flex items-center gap-3 text-xs pt-4"
+              <SpotlightCard className="rounded-2xl" spotlightColor="rgba(153, 69, 255, 0.2)">
+                <Link
+                  href="/courses"
+                  prefetch={false}
+                  className="rounded-2xl p-6 transition-all duration-200 block group h-full"
                   style={{
-                    color: "var(--text-muted)",
-                    borderTop: "1px solid var(--border-subtle)",
+                    background: "rgba(255,255,255,0.03)",
+                    border: "1px solid var(--border-subtle)",
+                    boxShadow: "var(--shadow-card)",
+                  }}
+                  onMouseEnter={(e) => {
+                    const el = e.currentTarget as HTMLElement;
+                    el.style.borderColor = "var(--border-purple)";
+                    el.style.boxShadow = "var(--shadow-card-hover)";
+                    el.style.transform = "translateY(-2px)";
+                  }}
+                  onMouseLeave={(e) => {
+                    const el = e.currentTarget as HTMLElement;
+                    el.style.borderColor = "var(--border-subtle)";
+                    el.style.boxShadow = "var(--shadow-card)";
+                    el.style.transform = "translateY(0)";
                   }}
                 >
-                  <span>{t("paths.meta.lessons", { count: path.lessons })}</span>
-                  <span>·</span>
-                  <span style={{ color: "var(--text-purple)" }}>
-                    {path.xp.toLocaleString("en-US")} XP
-                  </span>
-                  <ArrowRight
-                    size={14}
-                    className="ml-auto transition-transform group-hover:translate-x-1"
-                    style={{ color: "var(--text-muted)" }}
-                  />
-                </div>
-              </Link>
+                  <div className="flex items-center justify-between mb-4">
+                    <span
+                      className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium"
+                      style={{
+                        color: path.diffColor,
+                        background: `${path.diffColor}15`,
+                        border: `1px solid ${path.diffColor}40`,
+                      }}
+                    >
+                      {t(path.difficultyKey)}
+                    </span>
+                    <span
+                      className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-medium"
+                      style={{
+                        color: "var(--text-purple)",
+                        background: "rgba(153,69,255,0.08)",
+                        border: "1px solid rgba(153,69,255,0.2)",
+                      }}
+                    >
+                      {t("common.demo")}
+                    </span>
+                  </div>
+                  <h3
+                    className="font-semibold text-base mb-2"
+                    style={{ color: "var(--text-primary)" }}
+                  >
+                    {t(path.titleKey)}
+                  </h3>
+                  <p
+                    className="text-sm mb-5 leading-relaxed"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    {t(path.descriptionKey)}
+                  </p>
+                  <div
+                    className="flex items-center gap-3 text-xs pt-4"
+                    style={{
+                      color: "var(--text-muted)",
+                      borderTop: "1px solid var(--border-subtle)",
+                    }}
+                  >
+                    <span>{t("paths.meta.lessons", { count: path.lessons })}</span>
+                    <span>·</span>
+                    <span style={{ color: "var(--text-purple)" }}>
+                      {path.xp.toLocaleString("en-US")} XP
+                    </span>
+                    <ArrowRight
+                      size={14}
+                      className="ml-auto transition-transform group-hover:translate-x-1"
+                      style={{ color: "var(--text-muted)" }}
+                    />
+                  </div>
+                </Link>
+              </SpotlightCard>
             </FadeInSection>
           ))}
         </div>
       </section>
 
-      {/* ── Features ─────────────────────────────────────────────────── */}
+      {/* -- Features --------------------------------------------------- */}
       <section
         style={{
-          background: "var(--bg-surface)",
+          background: "transparent",
           borderTop: "1px solid var(--border-subtle)",
           borderBottom: "1px solid var(--border-subtle)",
         }}
@@ -636,51 +606,53 @@ export default function LandingPage() {
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {FEATURES.map((f, i) => (
               <FadeInSection key={f.id} delay={i * 0.08}>
-                <div
-                  className="rounded-2xl p-6 transition-all duration-200 h-full group"
-                  style={{
-                    background: f.accentBg,
-                    border: `1px solid ${f.accent}20`,
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = "translateY(-2px)";
-                    e.currentTarget.style.borderColor = `${f.accent}40`;
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = "translateY(0)";
-                    e.currentTarget.style.borderColor = `${f.accent}20`;
-                  }}
-                >
+                <SpotlightCard className="rounded-2xl" spotlightColor={`${f.accent}55`}>
                   <div
-                    className="w-11 h-11 rounded-xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110"
-                    style={{ background: `${f.accent}18` }}
+                    className="rounded-2xl p-6 transition-all duration-200 h-full group"
+                    style={{
+                      background: f.accentBg,
+                      border: `1px solid ${f.accent}20`,
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = "translateY(-2px)";
+                      e.currentTarget.style.borderColor = `${f.accent}40`;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = "translateY(0)";
+                      e.currentTarget.style.borderColor = `${f.accent}20`;
+                    }}
                   >
-                    <f.icon
-                      size={20}
-                      aria-hidden="true"
-                      style={{ color: f.accent }}
-                    />
+                    <div
+                      className="w-11 h-11 rounded-xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110"
+                      style={{ background: `${f.accent}18` }}
+                    >
+                      <f.icon
+                        size={20}
+                        aria-hidden="true"
+                        style={{ color: f.accent }}
+                      />
+                    </div>
+                    <h3
+                      className="font-semibold text-sm mb-2"
+                      style={{ color: "var(--text-primary)" }}
+                    >
+                      {t(f.titleKey)}
+                    </h3>
+                    <p
+                      className="text-sm leading-relaxed"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
+                      {t(f.descriptionKey)}
+                    </p>
                   </div>
-                  <h3
-                    className="font-semibold text-sm mb-2"
-                    style={{ color: "var(--text-primary)" }}
-                  >
-                    {t(f.titleKey)}
-                  </h3>
-                  <p
-                    className="text-sm leading-relaxed"
-                    style={{ color: "var(--text-secondary)" }}
-                  >
-                    {t(f.descriptionKey)}
-                  </p>
-                </div>
+                </SpotlightCard>
               </FadeInSection>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── How it works ──────────────────────────────────────────────── */}
+      {/* -- How it works ------------------------------------------------ */}
       <section className="mx-auto max-w-6xl px-4 sm:px-6 py-16 sm:py-20">
         <FadeInSection>
           <div className="text-center mb-12">
@@ -735,10 +707,10 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Testimonials ──────────────────────────────────────────────── */}
+      {/* -- Testimonials ------------------------------------------------ */}
       <section
         style={{
-          background: "var(--bg-surface)",
+          background: "transparent",
           borderTop: "1px solid var(--border-subtle)",
           borderBottom: "1px solid var(--border-subtle)",
         }}
@@ -761,49 +733,64 @@ export default function LandingPage() {
           <div className="grid gap-6 sm:grid-cols-3">
             {TESTIMONIALS.map((item, i) => (
               <FadeInSection key={item.id} delay={i * 0.1}>
-                <div
-                  className="rounded-2xl p-6 h-full flex flex-col"
-                  style={{
-                    background: "var(--bg-base)",
-                    border: "1px solid var(--border-subtle)",
-                  }}
-                >
-                  <p
-                    className="text-sm leading-relaxed flex-1 mb-5"
-                    style={{ color: "var(--text-secondary)" }}
+                <SpotlightCard className="rounded-2xl" spotlightColor={`${item.color}66`}>
+                  <div
+                    className="rounded-2xl p-6 h-full flex flex-col transition-all duration-300"
+                    style={{
+                      background: "rgba(255,255,255,0.03)",
+                      border: "1px solid var(--border-subtle)",
+                    }}
+                    onMouseEnter={(e) => {
+                      const el = e.currentTarget as HTMLElement;
+                      el.style.transform = "translateY(-4px)";
+                      el.style.borderColor = `${item.color}66`;
+                      el.style.background =
+                        "linear-gradient(135deg, rgba(153,69,255,0.13) 0%, rgba(25,251,155,0.08) 55%, rgba(0,140,76,0.12) 100%)";
+                    }}
+                    onMouseLeave={(e) => {
+                      const el = e.currentTarget as HTMLElement;
+                      el.style.transform = "translateY(0)";
+                      el.style.borderColor = "var(--border-subtle)";
+                      el.style.background = "rgba(255,255,255,0.03)";
+                    }}
                   >
-                    &ldquo;{t(item.quoteKey)}&rdquo;
-                  </p>
-                  <div className="flex items-center gap-3">
-                    <div
-                      className="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold"
-                      style={{ background: `${item.color}20`, color: item.color }}
+                    <p
+                      className="text-sm leading-relaxed flex-1 mb-5"
+                      style={{ color: "var(--text-secondary)" }}
                     >
-                      {item.avatar}
-                    </div>
-                    <div>
+                      &ldquo;{t(item.quoteKey)}&rdquo;
+                    </p>
+                    <div className="flex items-center gap-3">
                       <div
-                        className="text-sm font-semibold"
-                        style={{ color: "var(--text-primary)" }}
+                        className="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold"
+                        style={{ background: `${item.color}20`, color: item.color }}
                       >
-                        {t(item.nameKey)}
+                        {item.avatar}
                       </div>
-                      <div className="text-xs" style={{ color: "var(--text-muted)" }}>
-                        {t(item.roleKey)}
+                      <div>
+                        <div
+                          className="text-sm font-semibold"
+                          style={{ color: "var(--text-primary)" }}
+                        >
+                          {t(item.nameKey)}
+                        </div>
+                        <div className="text-xs" style={{ color: "var(--text-muted)" }}>
+                          {t(item.roleKey)}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                </SpotlightCard>
               </FadeInSection>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── Partner / Ecosystem Logos ─────────────────────────────── */}
+      {/* -- Partner / Ecosystem Logos ------------------------------- */}
       <section
         style={{
-          background: "var(--bg-surface)",
+          background: "transparent",
           borderTop: "1px solid var(--border-subtle)",
           borderBottom: "1px solid var(--border-subtle)",
         }}
@@ -832,216 +819,146 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Superteam Brasil spotlight ────────────────────────────── */}
+      {/* -- Superteam Brasil spotlight ------------------------------ */}
       <section className="mx-auto max-w-6xl px-4 sm:px-6 py-16 sm:py-20">
         <FadeInSection>
-          <div
-            className="rounded-3xl p-8 sm:p-12 flex flex-col sm:flex-row items-center gap-8 sm:gap-12"
-            style={{
-              background: "linear-gradient(135deg, rgba(0,140,76,0.08) 0%, rgba(47,107,63,0.06) 100%)",
-              border: "1px solid rgba(0,140,76,0.2)",
-            }}
-          >
-            <div className="shrink-0">
-              <Image
-                src="/brand/superteam/ST-EMERALD-GREEN-HORIZONTAL.svg"
-                alt={t("superteam.logoAlt")}
-                width={200}
-                height={46}
-                className="h-10 w-auto"
-              />
+          <SpotlightCard className="rounded-3xl" spotlightColor="rgba(0, 140, 76, 0.28)">
+            <div
+              className="rounded-3xl p-8 sm:p-12 flex flex-col sm:flex-row items-center gap-8 sm:gap-12"
+              style={{
+                background: "linear-gradient(135deg, rgba(0,140,76,0.08) 0%, rgba(47,107,63,0.06) 100%)",
+                border: "1px solid rgba(0,140,76,0.2)",
+              }}
+            >
+              <div className="shrink-0">
+                <Image
+                  src="/brand/superteam/ST-EMERALD-GREEN-HORIZONTAL.svg"
+                  alt={t("superteam.logoAlt")}
+                  width={200}
+                  height={46}
+                  className="h-10 w-auto"
+                />
+              </div>
+              <div className="flex-1 text-center sm:text-left">
+                <p
+                  className="text-base sm:text-lg leading-relaxed mb-4"
+                  style={{ color: "var(--text-secondary)" }}
+                >
+                  {t("superteam.body")}
+                </p>
+                <a
+                  href="https://x.com/superteambr"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-sm font-medium transition-colors"
+                  style={{ color: "#008c4c" }}
+                >
+                  {t("superteam.link")}
+                  <ExternalLink size={13} aria-hidden="true" />
+                </a>
+              </div>
             </div>
-            <div className="flex-1 text-center sm:text-left">
-              <p
-                className="text-base sm:text-lg leading-relaxed mb-4"
-                style={{ color: "var(--text-secondary)" }}
-              >
-                {t("superteam.body")}
-              </p>
-              <a
-                href="https://superteam.fun/brasil"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-sm font-medium transition-colors"
-                style={{ color: "#008c4c" }}
-              >
-                {t("superteam.link")}
-                <ExternalLink size={13} aria-hidden="true" />
-              </a>
-            </div>
-          </div>
+          </SpotlightCard>
         </FadeInSection>
       </section>
 
-      {/* ── Newsletter ───────────────────────────────────────────────── */}
-      <section
-        style={{
-          background: "var(--bg-surface)",
-          borderTop: "1px solid var(--border-subtle)",
-          borderBottom: "1px solid var(--border-subtle)",
-        }}
-      >
-        <div className="mx-auto max-w-2xl px-4 sm:px-6 py-14 text-center">
-          <FadeInSection>
+      {/* -- CTA banner ----------------------------------------------- */}
+      <section className="mx-auto w-full max-w-[110rem] px-2 sm:px-8 lg:px-12 py-16 sm:py-20">
+        <FadeInSection>
+          <SpotlightCard className="rounded-3xl w-full" spotlightColor="rgba(153, 69, 255, 0.24)">
             <div
-              className="w-11 h-11 rounded-xl flex items-center justify-center mx-auto mb-4"
-              style={{ background: "rgba(153,69,255,0.1)", border: "1px solid rgba(153,69,255,0.25)" }}
+              className="rounded-3xl p-10 sm:p-20 lg:p-24 min-h-[360px] text-center relative overflow-hidden flex items-center justify-center"
+              style={{
+                background:
+                  "linear-gradient(135deg, rgba(153,69,255,0.15) 0%, rgba(25,251,155,0.08) 100%)",
+                border: "1px solid rgba(153,69,255,0.25)",
+              }}
             >
-              <Mail size={20} style={{ color: "var(--solana-purple)" }} aria-hidden="true" />
-            </div>
-            <h2
-              className="text-xl sm:text-2xl font-bold tracking-tight mb-2"
-              style={{ color: "var(--text-primary)" }}
-            >
-              {t("newsletter.title")}
-            </h2>
-            <p className="text-sm mb-6" style={{ color: "var(--text-secondary)" }}>
-              {t("newsletter.subtitle")}
-            </p>
-            {subscribed ? (
+              {/* Decorative orbs */}
               <div
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium"
+                className="absolute -top-16 -right-16 w-48 h-48 rounded-full pointer-events-none"
+                aria-hidden="true"
                 style={{
-                  background: "rgba(25,251,155,0.1)",
-                  border: "1px solid rgba(25,251,155,0.25)",
-                  color: "var(--solana-green)",
+                  background:
+                    "radial-gradient(circle, rgba(153,69,255,0.2) 0%, transparent 70%)",
                 }}
-              >
-                <CheckCircle size={16} aria-hidden="true" />
-                {t("newsletter.subscribed")}
-              </div>
-            ) : (
-              <form
-                onSubmit={handleNewsletter}
-                className="flex flex-col sm:flex-row gap-2 max-w-sm mx-auto"
-              >
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder={t("newsletter.emailPlaceholder")}
-                  className="flex-1 px-4 py-2.5 rounded-xl text-sm outline-none transition-all"
-                  aria-label={t("newsletter.emailAria")}
-                  style={{
-                    background: "var(--bg-elevated)",
-                    border: "1px solid var(--border-default)",
-                    color: "var(--text-primary)",
-                  }}
-                  onFocus={(e) => { (e.target as HTMLElement).style.borderColor = "rgba(153,69,255,0.5)"; }}
-                  onBlur={(e) => { (e.target as HTMLElement).style.borderColor = "var(--border-default)"; }}
-                />
-                <button
-                  type="submit"
-                  className="min-h-[42px] px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200"
+              />
+              <div
+                className="absolute -bottom-16 -left-16 w-40 h-40 rounded-full pointer-events-none"
+                aria-hidden="true"
+                style={{
+                  background:
+                    "radial-gradient(circle, rgba(25,251,155,0.15) 0%, transparent 70%)",
+                }}
+              />
+
+              <div className="relative z-10 w-full max-w-5xl mx-auto">
+                <div className="flex justify-center mb-5">
+                  <div
+                    className="w-14 h-14 rounded-2xl flex items-center justify-center"
+                    style={{
+                      background: "rgba(25,251,155,0.15)",
+                      border: "1px solid rgba(25,251,155,0.3)",
+                    }}
+                  >
+                    <CheckCircle
+                      size={28}
+                      style={{ color: "var(--solana-green)" }}
+                      aria-hidden="true"
+                    />
+                  </div>
+                </div>
+                <h2
+                  className="text-3xl sm:text-5xl font-bold tracking-tight mb-4"
+                  style={{ color: "var(--text-primary)" }}
+                >
+                  {t("finalCta.title")}
+                </h2>
+                <p
+                  className="text-base sm:text-xl mb-8 max-w-3xl mx-auto"
+                  style={{ color: "var(--text-secondary)" }}
+                >
+                  {t("finalCta.subtitle")}
+                </p>
+                <Link
+                  href="/courses"
+                  prefetch={false}
+                  className="group inline-flex items-center gap-2 min-h-[48px] px-8 py-3.5 rounded-xl font-semibold text-base transition-all duration-200 shadow-lg"
                   style={{
                     background: "var(--solana-purple)",
                     color: "#fff",
-                    boxShadow: "0 2px 12px rgba(153,69,255,0.25)",
+                    boxShadow: "0 4px 24px rgba(153,69,255,0.3)",
                   }}
-                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.filter = "brightness(1.1)"; }}
-                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.filter = "none"; }}
-                >
-                  {t("newsletter.subscribe")}
-                </button>
-              </form>
-            )}
-          </FadeInSection>
-        </div>
-      </section>
-
-      {/* ── CTA banner ─────────────────────────────────────────────── */}
-      <section className="mx-auto max-w-6xl px-4 sm:px-6 py-16 sm:py-20">
-        <FadeInSection>
-          <div
-            className="rounded-3xl p-8 sm:p-14 text-center relative overflow-hidden"
-            style={{
-              background:
-                "linear-gradient(135deg, rgba(153,69,255,0.15) 0%, rgba(25,251,155,0.08) 100%)",
-              border: "1px solid rgba(153,69,255,0.25)",
-            }}
-          >
-            {/* Decorative orbs */}
-            <div
-              className="absolute -top-16 -right-16 w-48 h-48 rounded-full pointer-events-none"
-              aria-hidden="true"
-              style={{
-                background:
-                  "radial-gradient(circle, rgba(153,69,255,0.2) 0%, transparent 70%)",
-              }}
-            />
-            <div
-              className="absolute -bottom-16 -left-16 w-40 h-40 rounded-full pointer-events-none"
-              aria-hidden="true"
-              style={{
-                background:
-                  "radial-gradient(circle, rgba(25,251,155,0.15) 0%, transparent 70%)",
-              }}
-            />
-
-            <div className="relative z-10">
-              <div className="flex justify-center mb-5">
-                <div
-                  className="w-14 h-14 rounded-2xl flex items-center justify-center"
-                  style={{
-                    background: "rgba(25,251,155,0.15)",
-                    border: "1px solid rgba(25,251,155,0.3)",
+                  onMouseEnter={(e) => {
+                    const el = e.currentTarget as HTMLElement;
+                    el.style.background = "var(--solana-purple-dim)";
+                    el.style.transform = "translateY(-1px)";
+                    el.style.boxShadow = "0 8px 32px rgba(153,69,255,0.4)";
+                  }}
+                  onMouseLeave={(e) => {
+                    const el = e.currentTarget as HTMLElement;
+                    el.style.background = "var(--solana-purple)";
+                    el.style.transform = "translateY(0)";
+                    el.style.boxShadow = "0 4px 24px rgba(153,69,255,0.3)";
                   }}
                 >
-                  <CheckCircle
-                    size={28}
-                    style={{ color: "var(--solana-green)" }}
+                  {t("finalCta.cta")}
+                  <ArrowRight
+                    size={18}
                     aria-hidden="true"
+                    className="transition-transform group-hover:translate-x-0.5"
                   />
-                </div>
+                </Link>
               </div>
-              <h2
-                className="text-2xl sm:text-4xl font-bold tracking-tight mb-4"
-                style={{ color: "var(--text-primary)" }}
-              >
-                {t("finalCta.title")}
-              </h2>
-              <p
-                className="text-base sm:text-lg mb-8 max-w-md mx-auto"
-                style={{ color: "var(--text-secondary)" }}
-              >
-                {t("finalCta.subtitle")}
-              </p>
-              <Link
-                href="/courses"
-                prefetch={false}
-                className="group inline-flex items-center gap-2 min-h-[48px] px-8 py-3.5 rounded-xl font-semibold text-base transition-all duration-200 shadow-lg"
-                style={{
-                  background: "var(--solana-purple)",
-                  color: "#fff",
-                  boxShadow: "0 4px 24px rgba(153,69,255,0.3)",
-                }}
-                onMouseEnter={(e) => {
-                  const el = e.currentTarget as HTMLElement;
-                  el.style.background = "var(--solana-purple-dim)";
-                  el.style.transform = "translateY(-1px)";
-                  el.style.boxShadow = "0 8px 32px rgba(153,69,255,0.4)";
-                }}
-                onMouseLeave={(e) => {
-                  const el = e.currentTarget as HTMLElement;
-                  el.style.background = "var(--solana-purple)";
-                  el.style.transform = "translateY(0)";
-                  el.style.boxShadow = "0 4px 24px rgba(153,69,255,0.3)";
-                }}
-              >
-                {t("finalCta.cta")}
-                <ArrowRight
-                  size={18}
-                  aria-hidden="true"
-                  className="transition-transform group-hover:translate-x-0.5"
-                />
-              </Link>
             </div>
-          </div>
+          </SpotlightCard>
         </FadeInSection>
       </section>
 
-      <Footer />
+        <Footer />
+      </div>
+      </GridGlowBackground>
     </div>
   );
 }
+

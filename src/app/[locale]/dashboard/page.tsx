@@ -31,6 +31,7 @@ import {
 import { useAuthGate } from "@/hooks/useAuthGate";
 import { PageSkeleton } from "@/components/Skeleton";
 import { EmptyState } from "@/components/EmptyState";
+import { SpotlightCard } from "@/components/ui/spotlight-card";
 
 type TValues = Record<string, string | number>;
 type DashboardT = (key: string, values?: TValues) => string;
@@ -84,13 +85,14 @@ function StreakHeatmap({ t }: { t: DashboardT }) {
   );
 
   return (
-    <div
-      className="rounded-2xl p-5"
-      style={{
-        background: "var(--bg-surface)",
-        border: "1px solid var(--border-subtle)",
-      }}
-    >
+    <SpotlightCard className="rounded-2xl" spotlightColor="rgba(153, 69, 255, 0.2)">
+      <div
+        className="rounded-2xl p-5"
+        style={{
+          background: "var(--bg-surface)",
+          border: "1px solid var(--border-subtle)",
+        }}
+      >
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Flame size={16} style={{ color: "#f87171" }} aria-hidden="true" />
@@ -193,7 +195,8 @@ function StreakHeatmap({ t }: { t: DashboardT }) {
           {t("streak.today")}
         </span>
       </div>
-    </div>
+      </div>
+    </SpotlightCard>
   );
 }
 
@@ -212,13 +215,14 @@ function DailyGoalRing({
   const dashOffset = circ * (1 - pct / 100);
 
   return (
-    <div
-      className="rounded-2xl p-5 flex items-center gap-5"
-      style={{
-        background: "var(--bg-surface)",
-        border: "1px solid var(--border-subtle)",
-      }}
-    >
+    <SpotlightCard className="rounded-2xl" spotlightColor="rgba(25, 251, 155, 0.2)">
+      <div
+        className="rounded-2xl p-5 flex items-center gap-5"
+        style={{
+          background: "var(--bg-surface)",
+          border: "1px solid var(--border-subtle)",
+        }}
+      >
       <div className="shrink-0 relative">
         <svg
           width="90"
@@ -316,7 +320,8 @@ function DailyGoalRing({
             : t("dailyGoal.toGo", { xp: Math.max(DAILY_GOAL_XP - earnedToday, 0) })}
         </p>
       </div>
-    </div>
+      </div>
+    </SpotlightCard>
   );
 }
 
@@ -329,13 +334,14 @@ function AchievementsPreview({ t }: { t: DashboardT }) {
   ];
 
   return (
-    <div
-      className="rounded-2xl p-5"
-      style={{
-        background: "var(--bg-surface)",
-        border: "1px solid var(--border-subtle)",
-      }}
-    >
+    <SpotlightCard className="rounded-2xl" spotlightColor="rgba(153, 69, 255, 0.2)">
+      <div
+        className="rounded-2xl p-5"
+        style={{
+          background: "var(--bg-surface)",
+          border: "1px solid var(--border-subtle)",
+        }}
+      >
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Star size={15} style={{ color: "#fbbf24" }} aria-hidden="true" />
@@ -390,7 +396,8 @@ function AchievementsPreview({ t }: { t: DashboardT }) {
           </div>
         ))}
       </div>
-    </div>
+      </div>
+    </SpotlightCard>
   );
 }
 
@@ -553,14 +560,15 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 mb-6">
-        <div
-          className="rounded-2xl p-6 relative overflow-hidden"
-          style={{
-            background:
-              "linear-gradient(135deg, rgba(153,69,255,0.18) 0%, rgba(25,251,155,0.06) 100%)",
-            border: "1px solid rgba(153,69,255,0.3)",
-          }}
-        >
+        <SpotlightCard className="rounded-2xl" spotlightColor="rgba(153, 69, 255, 0.24)">
+          <div
+            className="rounded-2xl p-6 relative overflow-hidden"
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(153,69,255,0.18) 0%, rgba(25,251,155,0.06) 100%)",
+              border: "1px solid rgba(153,69,255,0.3)",
+            }}
+          >
           <div
             className="absolute -top-6 -right-6 w-28 h-28 rounded-full pointer-events-none"
             aria-hidden="true"
@@ -641,7 +649,8 @@ export default function DashboardPage() {
               />
             </div>
           </div>
-        </div>
+          </div>
+        </SpotlightCard>
 
         <DailyGoalRing earnedToday={dailyXp} t={t} />
       </div>
@@ -658,24 +667,25 @@ export default function DashboardPage() {
           {t("sections.continueLearning")}
         </h2>
         {inProgressCourse && inProgressRow ? (
-          <Link
-            href={`/${locale}/courses/${inProgressCourse.courseId}/lessons/${Math.min(inProgressRow.completed, Math.max(inProgressCourse.lessonCount - 1, 0))}`}
-            className="flex items-center justify-between rounded-xl p-4 transition-all duration-150"
-            style={{
-              background: "var(--bg-surface)",
-              border: "1px solid var(--border-default)",
-            }}
-            onMouseEnter={(e) => {
-              const el = e.currentTarget as HTMLElement;
-              el.style.borderColor = "var(--border-purple)";
-              el.style.transform = "translateY(-1px)";
-            }}
-            onMouseLeave={(e) => {
-              const el = e.currentTarget as HTMLElement;
-              el.style.borderColor = "var(--border-default)";
-              el.style.transform = "translateY(0)";
-            }}
-          >
+          <SpotlightCard className="rounded-xl" spotlightColor="rgba(153, 69, 255, 0.2)">
+            <Link
+              href={`/${locale}/courses/${inProgressCourse.courseId}/lessons/${Math.min(inProgressRow.completed, Math.max(inProgressCourse.lessonCount - 1, 0))}`}
+              className="flex items-center justify-between rounded-xl p-4 transition-all duration-150"
+              style={{
+                background: "var(--bg-surface)",
+                border: "1px solid var(--border-default)",
+              }}
+              onMouseEnter={(e) => {
+                const el = e.currentTarget as HTMLElement;
+                el.style.borderColor = "var(--border-purple)";
+                el.style.transform = "translateY(-1px)";
+              }}
+              onMouseLeave={(e) => {
+                const el = e.currentTarget as HTMLElement;
+                el.style.borderColor = "var(--border-default)";
+                el.style.transform = "translateY(0)";
+              }}
+            >
             <div className="flex items-center gap-3">
               <div
                 className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
@@ -736,15 +746,17 @@ export default function DashboardPage() {
                 aria-hidden="true"
               />
             </div>
-          </Link>
+            </Link>
+          </SpotlightCard>
         ) : (
-          <div
-            className="rounded-xl p-4 flex items-center justify-between"
-            style={{
-              background: "var(--bg-surface)",
-              border: "1px solid var(--border-subtle)",
-            }}
-          >
+          <SpotlightCard className="rounded-xl" spotlightColor="rgba(153, 69, 255, 0.2)">
+            <div
+              className="rounded-xl p-4 flex items-center justify-between"
+              style={{
+                background: "var(--bg-surface)",
+                border: "1px solid var(--border-subtle)",
+              }}
+            >
             <p className="text-sm" style={{ color: "var(--text-muted)" }}>
               {t("continue.none")} {" "}
               <Link
@@ -755,7 +767,8 @@ export default function DashboardPage() {
                 {t("continue.browseCta")}
               </Link>
             </p>
-          </div>
+            </div>
+          </SpotlightCard>
         )}
       </div>
 
@@ -994,13 +1007,14 @@ export default function DashboardPage() {
               {t("common.demo")}
             </span>
           </div>
-          <div
-            className="rounded-xl overflow-hidden"
-            style={{
-              background: "var(--bg-surface)",
-              border: "1px solid var(--border-subtle)",
-            }}
-          >
+          <SpotlightCard className="rounded-xl" spotlightColor="rgba(153, 69, 255, 0.2)">
+            <div
+              className="rounded-xl overflow-hidden"
+              style={{
+                background: "var(--bg-surface)",
+                border: "1px solid var(--border-subtle)",
+              }}
+            >
             {demoActivity.map((item, i) => (
               <div
                 key={i}
@@ -1034,7 +1048,8 @@ export default function DashboardPage() {
                 </span>
               </div>
             ))}
-          </div>
+            </div>
+          </SpotlightCard>
         </div>
       </div>
     </div>

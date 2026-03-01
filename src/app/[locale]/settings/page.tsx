@@ -24,6 +24,7 @@ import { useAuthGate } from "@/hooks/useAuthGate";
 import { useEffect, useState } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { LocaleSwitcher } from "@/components/LocaleSwitcher";
+import { SpotlightCard } from "@/components/ui/spotlight-card";
 import type { LinkedAccount, SocialAuthInfo } from "@/services/AuthService";
 import { getAuthService } from "@/services/AuthService";
 
@@ -56,15 +57,16 @@ function Section({
       >
         {title}
       </h2>
-      <div
-        className="rounded-xl overflow-hidden"
-        style={{
-          background: "var(--bg-surface)",
-          border: "1px solid var(--border-subtle)",
-        }}
-      >
-        {children}
-      </div>
+      <SpotlightCard className="rounded-xl overflow-hidden" spotlightColor="rgba(153, 69, 255, 0.2)">
+        <div
+          style={{
+            background: "var(--bg-surface)",
+            border: "1px solid var(--border-subtle)",
+          }}
+        >
+          {children}
+        </div>
+      </SpotlightCard>
     </div>
   );
 }
