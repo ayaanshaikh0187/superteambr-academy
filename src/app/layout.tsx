@@ -1,6 +1,7 @@
-import type { Metadata } from "next";
+  import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/next"
 import "./globals.css";
 
 function getSafeGaMeasurementId(value: string | undefined): string | null {
@@ -73,6 +74,7 @@ export default async function RootLayout({
             `}
           </Script>
         ) : null}
+        <Analytics />
       </body>
     </html>
   );
