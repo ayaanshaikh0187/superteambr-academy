@@ -51,11 +51,18 @@ export function AuthMethodsCard({
           <button
             onClick={onGoogle}
             disabled={!providers.google}
-            className="w-full min-h-[44px] rounded-xl px-4 text-sm font-medium transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-full min-h-[46px] rounded-xl px-4 text-sm font-semibold transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed"
             style={{
-              background: "var(--bg-elevated)",
-              border: "1px solid var(--border-default)",
-              color: "var(--text-primary)",
+              background: providers.google
+                ? "linear-gradient(135deg, rgba(153,69,255,0.95), rgba(25,251,155,0.72))"
+                : "var(--bg-elevated)",
+              border: providers.google
+                ? "1px solid rgba(153,69,255,0.35)"
+                : "1px solid var(--border-default)",
+              color: providers.google ? "#fff" : "var(--text-primary)",
+              boxShadow: providers.google
+                ? "0 8px 22px rgba(153,69,255,0.28)"
+                : "none",
             }}
             title={!providers.google ? googleUnavailable : undefined}
           >
@@ -65,11 +72,18 @@ export function AuthMethodsCard({
           <button
             onClick={onGithub}
             disabled={!providers.github}
-            className="w-full min-h-[44px] rounded-xl px-4 text-sm font-medium transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-full min-h-[46px] rounded-xl px-4 text-sm font-semibold transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed"
             style={{
-              background: "var(--bg-elevated)",
-              border: "1px solid var(--border-default)",
-              color: "var(--text-primary)",
+              background: providers.github
+                ? "linear-gradient(135deg, rgba(0,140,76,0.92), rgba(47,107,63,0.82))"
+                : "var(--bg-elevated)",
+              border: providers.github
+                ? "1px solid rgba(0,140,76,0.35)"
+                : "1px solid var(--border-default)",
+              color: providers.github ? "#fff" : "var(--text-primary)",
+              boxShadow: providers.github
+                ? "0 8px 22px rgba(0,140,76,0.28)"
+                : "none",
             }}
             title={!providers.github ? githubUnavailable : undefined}
           >

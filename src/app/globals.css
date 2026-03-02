@@ -430,3 +430,21 @@ h1, h2, h3, h4 {
   60%  { transform: translateY(-4px) scale(1.03); }
   100% { opacity: 1; transform: translateY(0) scale(1); }
 }
+
+/* Global click affordance */
+a[href],
+button,
+[role="button"],
+summary,
+label[for],
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+  cursor: pointer;
+}
+
+button:disabled,
+input:disabled,
+[aria-disabled="true"] {
+  cursor: not-allowed;
+}

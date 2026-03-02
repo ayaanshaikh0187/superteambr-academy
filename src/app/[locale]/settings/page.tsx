@@ -458,18 +458,22 @@ export default function SettingsPage() {
           description={t("account.google.description")}
         >
           {providers.google ? (
-            <button
-              onClick={() => handleProviderSignIn("google")}
-              disabled={sessionStatus === "loading"}
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium transition-colors duration-150 disabled:opacity-60 disabled:cursor-not-allowed"
-              style={{
-                background: "var(--bg-elevated)",
-                color: "var(--text-primary)",
-                border: "1px solid var(--border-default)",
-              }}
-            >
-              {session?.provider === "google"
-                ? t("account.google.connected")
+              <button
+                onClick={() => handleProviderSignIn("google")}
+                disabled={sessionStatus === "loading"}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed"
+                style={{
+                  background:
+                    session?.provider === "google"
+                      ? "linear-gradient(135deg, rgba(25,251,155,0.2), rgba(153,69,255,0.18))"
+                      : "linear-gradient(135deg, rgba(153,69,255,0.95), rgba(25,251,155,0.72))",
+                  color: "#fff",
+                  border: "1px solid rgba(153,69,255,0.35)",
+                  boxShadow: "0 8px 20px rgba(153,69,255,0.24)",
+                }}
+              >
+                {session?.provider === "google"
+                  ? t("account.google.connected")
                 : t("account.google.connect")}
             </button>
           ) : (
@@ -482,18 +486,22 @@ export default function SettingsPage() {
           description={t("account.github.description")}
         >
           {providers.github ? (
-            <button
-              onClick={() => handleProviderSignIn("github")}
-              disabled={sessionStatus === "loading"}
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium transition-colors duration-150 disabled:opacity-60 disabled:cursor-not-allowed"
-              style={{
-                background: "var(--bg-elevated)",
-                color: "var(--text-primary)",
-                border: "1px solid var(--border-default)",
-              }}
-            >
-              {session?.provider === "github"
-                ? t("account.github.connected")
+              <button
+                onClick={() => handleProviderSignIn("github")}
+                disabled={sessionStatus === "loading"}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed"
+                style={{
+                  background:
+                    session?.provider === "github"
+                      ? "linear-gradient(135deg, rgba(25,251,155,0.2), rgba(153,69,255,0.18))"
+                      : "linear-gradient(135deg, rgba(0,140,76,0.92), rgba(47,107,63,0.82))",
+                  color: "#fff",
+                  border: "1px solid rgba(0,140,76,0.35)",
+                  boxShadow: "0 8px 20px rgba(0,140,76,0.22)",
+                }}
+              >
+                {session?.provider === "github"
+                  ? t("account.github.connected")
                 : t("account.github.connect")}
             </button>
           ) : (
@@ -519,11 +527,18 @@ export default function SettingsPage() {
               <button
                 onClick={socialLinked ? handleUnlinkSocial : handleLinkSocial}
                 disabled={linkBusy}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors duration-150 disabled:opacity-60 disabled:cursor-not-allowed"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed"
                 style={{
-                  background: "var(--bg-elevated)",
-                  color: socialLinked ? "#f87171" : "var(--solana-green)",
-                  border: "1px solid var(--border-default)",
+                  background: socialLinked
+                    ? "linear-gradient(135deg, rgba(248,113,113,0.9), rgba(220,38,38,0.86))"
+                    : "linear-gradient(135deg, rgba(0,140,76,0.92), rgba(25,251,155,0.7))",
+                  color: "#fff",
+                  border: socialLinked
+                    ? "1px solid rgba(248,113,113,0.35)"
+                    : "1px solid rgba(25,251,155,0.3)",
+                  boxShadow: socialLinked
+                    ? "0 8px 20px rgba(248,113,113,0.22)"
+                    : "0 8px 20px rgba(0,140,76,0.22)",
                 }}
               >
                 {socialLinked ? (
