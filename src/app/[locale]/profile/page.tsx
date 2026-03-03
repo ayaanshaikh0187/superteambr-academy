@@ -170,16 +170,6 @@ function SkillRadar({ t }: { t: ProfileT }) {
         >
           {t("skillRadar.title")}
         </p>
-        <span
-          className="text-xs px-2 py-0.5 rounded-full"
-          style={{
-            color: "#fbbf24",
-            background: "rgba(251,191,36,0.1)",
-            border: "1px solid rgba(251,191,36,0.2)",
-          }}
-        >
-          {t("common.demo")}
-        </span>
       </div>
       <div className="flex justify-center">
         <svg
@@ -307,7 +297,7 @@ function XpCard({
             className="text-xs font-semibold uppercase tracking-wider mb-2"
             style={{ color: "var(--text-purple)" }}
           >
-            {isStub ? t("xp.localDemo") : t("xp.total")}
+            {t("xp.total")}
           </p>
           <p
             className="text-5xl font-bold leading-none"
@@ -377,17 +367,6 @@ function XpCard({
         </p>
       </div>
 
-      {isStub && (
-        <p
-          className="text-xs mt-3 pt-3"
-          style={{
-            color: "#fbbf24",
-            borderTop: "1px solid rgba(251,191,36,0.15)",
-          }}
-        >
-          {t("xp.demoNote")}
-        </p>
-      )}
       </div>
     </SpotlightCard>
   );

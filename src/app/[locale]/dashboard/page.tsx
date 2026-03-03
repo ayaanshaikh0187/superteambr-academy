@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -32,6 +32,7 @@ import { useAuthGate } from "@/hooks/useAuthGate";
 import { PageSkeleton } from "@/components/Skeleton";
 import { EmptyState } from "@/components/EmptyState";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
+import { getStreakHeatmap, STREAK_UPDATED_EVENT } from "@/lib/streak";
 
 type TValues = Record<string, string | number>;
 type DashboardT = (key: string, values?: TValues) => string;
@@ -49,35 +50,37 @@ type DashboardCourseRow = {
   source: "onchain" | "content";
 };
 
-function getStreakData(): boolean[] {
-  if (typeof window === "undefined") return Array(DAYS).fill(false);
-  try {
-    const raw = localStorage.getItem("academy_heatmap");
-    if (raw) return JSON.parse(raw) as boolean[];
-  } catch {}
-  const data = Array(DAYS).fill(false) as boolean[];
-  const activeIndices = [
-    0, 1, 3, 7, 8, 9, 14, 21, 22, 28, 35, 36, 40, 42, 49, 55, 56, 62, 63, 69,
-  ];
-  activeIndices.forEach((i) => {
-    if (i < DAYS) data[i] = true;
-  });
-  localStorage.setItem("academy_heatmap", JSON.stringify(data));
-  return data;
-}
-
-function getCurrentStreak(data: boolean[]): number {
+function getCurrentStreakFromData(data: boolean[]): number {
   let streak = 0;
-  for (let i = 0; i < data.length; i++) {
-    if (data[i]) streak++;
-    else break;
+  for (const active of data) {
+    if (active) {
+      streak += 1;
+      continue;
+    }
+    break;
   }
   return streak;
 }
 
 function StreakHeatmap({ t }: { t: DashboardT }) {
-  const data = getStreakData();
-  const streak = getCurrentStreak(data);
+  const [data, setData] = useState<boolean[]>(() => getStreakHeatmap(DAYS));
+
+  useEffect(() => {
+    function syncHeatmap() {
+      setData(getStreakHeatmap(DAYS));
+    }
+
+    syncHeatmap();
+    window.addEventListener(STREAK_UPDATED_EVENT, syncHeatmap);
+    window.addEventListener("storage", syncHeatmap);
+
+    return () => {
+      window.removeEventListener(STREAK_UPDATED_EVENT, syncHeatmap);
+      window.removeEventListener("storage", syncHeatmap);
+    };
+  }, []);
+
+  const streak = getCurrentStreakFromData(data);
   const totalActive = data.filter(Boolean).length;
 
   const cols = Array.from({ length: WEEKS }, (_, w) =>
@@ -103,16 +106,6 @@ function StreakHeatmap({ t }: { t: DashboardT }) {
             {t("streak.title")}
           </span>
         </div>
-        <span
-          className="text-xs px-2 py-0.5 rounded-full"
-          style={{
-            color: "#fbbf24",
-            background: "rgba(251,191,36,0.1)",
-            border: "1px solid rgba(251,191,36,0.2)",
-          }}
-        >
-          {t("common.demo")}
-        </span>
       </div>
 
       <div className="flex gap-5 mb-4">
@@ -352,16 +345,6 @@ function AchievementsPreview({ t }: { t: DashboardT }) {
             {t("achievements.title")}
           </span>
         </div>
-        <span
-          className="text-xs px-2 py-0.5 rounded-full"
-          style={{
-            color: "#fbbf24",
-            background: "rgba(251,191,36,0.1)",
-            border: "1px solid rgba(251,191,36,0.2)",
-          }}
-        >
-          {t("common.demo")}
-        </span>
       </div>
       <div className="grid grid-cols-4 gap-2">
         {achievements.map((a) => (
@@ -590,7 +573,7 @@ export default function DashboardPage() {
                   className="text-xs font-semibold uppercase tracking-wider"
                   style={{ color: "var(--text-purple)" }}
                 >
-                  {isStub ? t("xp.localDemo") : t("xp.total")}
+                  {t("xp.total")}
                 </p>
               </div>
               <p
@@ -996,16 +979,6 @@ export default function DashboardPage() {
             >
               {t("sections.recentActivity")}
             </h2>
-            <span
-              className="text-xs px-2 py-0.5 rounded-full"
-              style={{
-                color: "#fbbf24",
-                background: "rgba(251,191,36,0.1)",
-                border: "1px solid rgba(251,191,36,0.2)",
-              }}
-            >
-              {t("common.demo")}
-            </span>
           </div>
           <SpotlightCard className="rounded-xl" spotlightColor="rgba(153, 69, 255, 0.2)">
             <div

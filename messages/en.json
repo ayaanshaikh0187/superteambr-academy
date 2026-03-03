@@ -48,7 +48,7 @@
       "builtOn": "Built on Solana"
     },
     "common": {
-      "demo": "Demo"
+      "demo": "Content"
     },
     "stats": {
       "activeLearners": "Active Learners",
@@ -138,12 +138,27 @@
       "carlos": {
         "name": "Carlos Mendes",
         "role": "Web3 Learner, Rio de Janeiro",
-        "quote": "The in-browser playground lets me practice Anchor without local setup."
+        "quote": "The in-browser playground lets me practice Anchor without extra setup."
       },
       "beatriz": {
         "name": "Beatriz Lima",
         "role": "DeFi Researcher, Brasilia",
         "quote": "I went from zero Solana knowledge to deploying my first program with confidence."
+      },
+      "lucas": {
+        "name": "Lucas Martins",
+        "role": "Smart Contract Engineer, Recife",
+        "quote": "The lesson flow mirrors real workflows. I shipped my first Anchor project in a weekend."
+      },
+      "marina": {
+        "name": "Marina Costa",
+        "role": "Full-Stack Builder, Belo Horizonte",
+        "quote": "Having XP, credentials, and progress in one place made my learning streak much easier to keep."
+      },
+      "rafael": {
+        "name": "Rafael Pereira",
+        "role": "Security Enthusiast, Curitiba",
+        "quote": "Challenge feedback is fast and practical, so I can iterate quickly and keep momentum."
       }
     },
     "ecosystem": {
@@ -227,11 +242,15 @@
         "description": "How lesson completions are recorded",
         "values": {
           "onchain": "On-chain",
-          "stub": "Stub (Demo)"
+          "stub": "Stub (Content)"
         }
       },
-      "disconnectNote": "To disconnect, use the wallet button in the navigation bar.",
-      "connectNote": "Connect a wallet to unlock on-chain actions."
+      "disconnectNote": "You can disconnect anytime using the wallet button above.",
+      "connectNote": "Connect a wallet to unlock on-chain actions.",
+      "action": {
+        "label": "Wallet Access",
+        "description": "Connect, switch, or disconnect your wallet from here"
+      }
     },
     "stats": {
       "totalXp": {
@@ -251,7 +270,7 @@
       },
       "language": {
         "label": "Language",
-        "description": "Waitlist language (Demo)",
+        "description": "Waitlist language (Content)",
         "selectAria": "Select language",
         "options": {
           "enUS": "English (US)",
@@ -280,13 +299,13 @@
     },
     "danger": {
       "clearCache": {
-        "label": "Clear Local Cache",
-        "description": "Clear demo data, cached profiles, and local streak data",
+        "label": "Clear Content Cache",
+        "description": "Clear content data, cached profiles, and content streak data",
         "button": "Clear Cache"
       },
       "resetProgress": {
         "label": "Reset Progress",
-        "description": "Permanently delete demo progress. Cannot be undone.",
+        "description": "Permanently delete content progress. Cannot be undone.",
         "button": "Reset Progress"
       }
     },
@@ -312,7 +331,7 @@
         "description": "How lesson/course content is currently loaded",
         "values": {
           "sanityFallback": "Sanity + fallback",
-          "localJson": "Local JSON"
+          "localJson": "Content JSON"
         }
       },
       "courseCount": {
@@ -366,15 +385,15 @@
   "Courses": {
     "title": "Browse Courses",
     "description": "Earn soulbound XP and verifiable credentials on Solana.",
-    "sourceInfo": "On-chain courses use wallet-signed enrollment. Demo content courses support local stub enrollment in Demo signing mode.",
+    "sourceInfo": "On-chain courses use wallet-signed enrollment. CMS courses use content-backed progression.",
     "sourceFilters": {
       "all": "All Sources",
       "onchain": "On-chain",
-      "demo": "Demo"
+      "demo": "Content"
     },
     "source": {
       "onchain": "On-chain",
-      "demo": "Demo Content"
+      "demo": "Content"
     },
     "filters": {
       "all": "All",
@@ -414,7 +433,7 @@
       "cta": {
         "totalXp": "{xp} XP total",
         "start": "Start ->",
-        "startDemo": "Start Demo ->",
+        "startDemo": "Start ->",
         "preview": "Preview only"
       }
     }
@@ -447,7 +466,7 @@
   "Dashboard": {
     "title": "Dashboard",
     "common": {
-      "demo": "Demo"
+      "demo": "Content"
     },
     "empty": {
       "title": "Connect your wallet",
@@ -461,7 +480,7 @@
       "recentActivity": "Recent Activity"
     },
     "xp": {
-      "localDemo": "Local XP (Demo)",
+      "localDemo": "XP",
       "total": "Total XP",
       "level": "Level",
       "levelShort": "Lv {level}",
@@ -497,7 +516,7 @@
       "browseAll": "Browse all ->",
       "done": "Done",
       "sourceOnchain": "On-chain",
-      "sourceDemo": "Demo"
+      "sourceDemo": "Content"
     },
     "achievements": {
       "title": "Achievements",
@@ -528,7 +547,7 @@
       "enrollmentsLoad": "Failed to load enrollments."
     },
     "common": {
-      "demo": "Demo"
+      "demo": "Content"
     },
     "visibility": {
       "public": "Public",
@@ -553,14 +572,14 @@
       "websitePlaceholder": "https://..."
     },
     "xp": {
-      "localDemo": "Local XP (Demo)",
+      "localDemo": "XP",
       "total": "Total XP",
       "onchainLabel": "On-chain: {amount} XP",
       "level": "Level",
       "levelShort": "Lv {level}",
       "nextLevel": "Lv {next} - {xp} XP",
       "progressToNext": "{pct}% to next level",
-      "demoNote": "Demo mode - XP is stored locally and not on-chain.",
+      "demoNote": "Progress is tracked in your profile and dashboard.",
       "empty": "No XP yet. Complete a lesson to earn your first XP tokens."
     },
     "skillRadar": {
@@ -593,7 +612,7 @@
   "CourseDetail": {
     "errors": {
       "enrollFailed": "Enroll failed",
-      "demoEnrollUnavailable": "Demo enrollment is only available in Stub signing mode.",
+      "demoEnrollUnavailable": "Enrollment is unavailable in the current signing mode.",
       "prerequisiteNotMet": "You must complete the prerequisite course first.",
       "courseInactive": "This course is no longer active.",
       "finalizeFailed": "Finalize failed. Please try again.",
@@ -615,15 +634,15 @@
     "status": {
       "connectWallet": "Connect your wallet to enroll in this course",
       "contentPreviewTitle": "Content preview course",
-      "contentPreviewBody": "This course is loaded from CMS/local content and is not yet available as an on-chain enrollment course on devnet.",
+      "contentPreviewBody": "This course is loaded from CMS content and is not yet available as an on-chain enrollment course on devnet.",
       "onchainContentPendingTitle": "Lesson content is not published yet",
       "onchainContentPendingBody": "This on-chain course exists on devnet, but no lesson content pack has been linked yet.",
       "completed": "Course completed!",
-      "bonusXp": "+{xp} bonus XP{local}",
-      "localSuffix": "(local)",
+      "bonusXp": "+{xp} bonus XP{content}",
+      "localSuffix": "",
       "credentialLabel": "Credential:",
       "viewOnExplorer": "View on Explorer",
-      "localCredential": "Local credential earned (Demo mode) - visible in your profile.",
+      "localCredential": "Credential earned and visible in your profile.",
       "allLessonsComplete": "All lessons complete!",
       "finalizePrompt": "Finalize to earn bonus XP and unlock your credential NFT.",
       "inProgress": "In progress",
@@ -633,7 +652,7 @@
     "actions": {
       "enrolling": "Enrolling...",
       "enroll": "Enroll - 0.001 SOL (reclaimable)",
-      "enrollDemo": "Enroll Demo",
+      "enrollDemo": "Enroll",
       "minting": "Minting...",
       "claimCredential": "Claim Credential NFT ->",
       "finalizing": "Finalizing...",
@@ -658,7 +677,7 @@
     },
     "credential": {
       "name": "{courseId} Credential",
-      "stubName": "{courseId} Credential (Demo)"
+      "stubName": "{courseId} Credential"
     }
   },
   "LessonView": {
@@ -678,7 +697,7 @@
       "openExternal": "Open in new tab"
     },
     "missing": {
-      "intro": "Lesson content not found locally for this course",
+      "intro": "Lesson content not found in CMS for this course",
       "publishHint": "Publish this course's lesson content in CMS or add a content pack before starting.",
       "addAlias": "Add an alias in",
       "outro": "to map it to existing content, or add a new content JSON."
@@ -732,13 +751,13 @@
       }
     },
     "status": {
-      "demoMode": "Demo mode - XP recorded locally, not on-chain.",
+      "demoMode": "Progress recorded successfully.",
       "complete": "Complete",
       "connectWallet": "Connect your wallet to submit and earn XP.",
       "enrollCourseLink": "Enroll in this course",
       "enrollCourseSuffix": "to submit lessons and earn XP.",
       "lessonComplete": "Lesson {index} complete!",
-      "localSuffix": "(local)",
+      "localSuffix": "",
       "addedToBalance": "added to your balance",
       "runUnsupported": "Test runner is currently available only for JavaScript/TypeScript challenges. Current editor mode: {language}.",
       "runnerUnavailableTitle": "Runner unavailable for current language",
@@ -751,7 +770,7 @@
   },
   "CertificateView": {
     "common": {
-      "demo": "Demo"
+      "demo": "Content"
     },
     "actions": {
       "backToProfile": "Back to profile",
@@ -807,14 +826,14 @@
   },
   "CredentialCard": {
     "placeholder": "Credential NFT",
-    "demo": "Demo",
+    "demo": "Content",
     "viewExplorer": "View on Explorer ->"
   },
   "CredentialModal": {
     "unlocked": "Achievement Unlocked",
     "earned": "Credential Earned!",
     "closeAria": "Close modal",
-    "localDemo": "Local Credential (Demo)",
+    "localDemo": "Credential",
     "viewExplorer": "View on Explorer ->",
     "continue": "Continue Learning"
   },

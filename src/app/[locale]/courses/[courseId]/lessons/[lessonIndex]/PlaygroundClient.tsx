@@ -34,6 +34,7 @@ import { Confetti } from "@/components/Confetti";
 import { XpFlyup } from "@/components/XpFlyup";
 import { track } from "@/lib/analytics";
 import { createActionProof } from "@/lib/action-proof";
+import { markLearningActivityToday } from "@/lib/streak";
 
 interface PlaygroundClientProps {
   courseId: string;
@@ -340,12 +341,14 @@ export default function PlaygroundClient({
           );
           if (alreadyDone) {
             setXpEarned(0);
+            markLearningActivityToday();
           } else {
             markLessonCompleteStub(wallet, courseId, lessonIndex);
             const earned = xpPerLesson ?? 0;
             if (earned > 0) addStubXp(wallet, earned);
             const finalEarned = earned > 0 ? earned : null;
             setXpEarned(finalEarned);
+            markLearningActivityToday();
             track.lessonComplete(courseId, lessonIndex, earned);
             if (earned > 0) {
               track.xpEarned(earned, "lesson_complete");
@@ -378,6 +381,7 @@ export default function PlaygroundClient({
 
       if (res.status === 409) {
         setXpEarned(0);
+        markLearningActivityToday();
       } else if (!res.ok) {
         setOptimisticComplete(false);
         setSubmitError(
@@ -389,6 +393,7 @@ export default function PlaygroundClient({
       } else {
         const earned = data.xpEarned ?? null;
         setXpEarned(earned);
+        markLearningActivityToday();
         track.lessonComplete(courseId, lessonIndex, earned ?? 0);
         if ((earned ?? 0) > 0) {
           track.xpEarned(earned ?? 0, "lesson_complete");
@@ -550,19 +555,6 @@ export default function PlaygroundClient({
         <XpFlyup amount={xpEarned} onDone={() => setShowXpFlyup(false)} />
       )}
 
-      {signingMode === "stub" && (
-        <div
-          className="mb-4 rounded-xl px-4 py-2.5 text-sm flex items-center gap-2"
-          style={{
-            background: "rgba(251,191,36,0.06)",
-            border: "1px solid rgba(251,191,36,0.2)",
-            color: "#fbbf24",
-          }}
-        >
-          <span>{t("status.demoMode")}</span>
-        </div>
-      )}
-
       <div className="md:hidden flex flex-col gap-4 mb-4">
         {renderEditorPanel("w-full")}
         {renderResultsPanel("w-full min-w-0")}
@@ -617,9 +609,7 @@ export default function PlaygroundClient({
             {xpEarned !== null && xpEarned > 0 && (
               <p className="text-sm text-purple-300 mt-0.5">
                 +{xpEarned} XP
-                {signingMode === "stub"
-                  ? ` ${t("status.localSuffix")}`
-                  : ` ${t("status.addedToBalance")}`}
+                {` ${t("status.addedToBalance")}`}
               </p>
             )}
           </div>

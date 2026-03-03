@@ -105,6 +105,7 @@ const TESTIMONIALS = [
     quoteKey: "testimonials.ana.quote",
     avatar: "AS",
     color: "var(--solana-purple)",
+    spotlightColor: "rgba(153, 69, 255, 0.26)",
   },
   {
     id: "carlos",
@@ -113,6 +114,7 @@ const TESTIMONIALS = [
     quoteKey: "testimonials.carlos.quote",
     avatar: "CM",
     color: "var(--solana-green)",
+    spotlightColor: "rgba(25, 251, 155, 0.22)",
   },
   {
     id: "beatriz",
@@ -121,6 +123,34 @@ const TESTIMONIALS = [
     quoteKey: "testimonials.beatriz.quote",
     avatar: "BL",
     color: "var(--solana-cyan)",
+    spotlightColor: "rgba(67, 180, 202, 0.24)",
+  },
+  {
+    id: "lucas",
+    nameKey: "testimonials.lucas.name",
+    roleKey: "testimonials.lucas.role",
+    quoteKey: "testimonials.lucas.quote",
+    avatar: "LM",
+    color: "var(--solana-violet)",
+    spotlightColor: "rgba(135, 82, 243, 0.24)",
+  },
+  {
+    id: "marina",
+    nameKey: "testimonials.marina.name",
+    roleKey: "testimonials.marina.role",
+    quoteKey: "testimonials.marina.quote",
+    avatar: "MC",
+    color: "var(--solana-teal)",
+    spotlightColor: "rgba(40, 224, 185, 0.22)",
+  },
+  {
+    id: "rafael",
+    nameKey: "testimonials.rafael.name",
+    roleKey: "testimonials.rafael.role",
+    quoteKey: "testimonials.rafael.quote",
+    avatar: "RP",
+    color: "var(--solana-green)",
+    spotlightColor: "rgba(0, 140, 76, 0.22)",
   },
 ];
 
@@ -269,6 +299,92 @@ function FadeInSection({
       }}
     >
       {children}
+    </div>
+  );
+}
+
+function TestimonialsMarquee({
+  testimonials,
+}: {
+  testimonials: typeof TESTIMONIALS;
+}) {
+  const t = useTranslations("Landing");
+
+  return (
+    <div className="relative px-2 sm:px-4">
+      <div className="testimonials-marquee group">
+        <div className="testimonials-marquee-track">
+          {Array.from({ length: 2 }).map((_, loop) => (
+            <div
+              key={loop}
+              className="testimonials-marquee-strip"
+              aria-hidden={loop === 1}
+            >
+              {testimonials.map((item) => (
+                <SpotlightCard
+                  key={`${loop}-${item.id}`}
+                  className="rounded-2xl h-full w-[300px] sm:w-[340px] shrink-0 [&>div]:h-full"
+                  spotlightColor={item.spotlightColor}
+                >
+                  <div
+                    className="rounded-2xl p-6 h-full flex flex-col justify-between"
+                    style={{
+                      background:
+                        "linear-gradient(145deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.035) 100%)",
+                    }}
+                  >
+                    <p
+                      className="text-sm leading-relaxed mb-5 min-h-[5.1rem]"
+                      style={{
+                        color: "var(--text-secondary)",
+                        display: "-webkit-box",
+                        WebkitLineClamp: 3,
+                        WebkitBoxOrient: "vertical",
+                        overflow: "hidden",
+                      }}
+                    >
+                      &ldquo;{t(item.quoteKey)}&rdquo;
+                    </p>
+                    <div className="flex items-center gap-3">
+                      <div
+                        className="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold"
+                        style={{ background: `${item.color}20`, color: item.color }}
+                      >
+                        {item.avatar}
+                      </div>
+                      <div>
+                        <div
+                          className="text-sm font-semibold"
+                          style={{ color: "var(--text-primary)" }}
+                        >
+                          {t(item.nameKey)}
+                        </div>
+                        <div className="text-xs" style={{ color: "var(--text-muted)" }}>
+                          {t(item.roleKey)}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </SpotlightCard>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+      <div
+        className="pointer-events-none absolute inset-y-0 left-0 w-14 sm:w-24"
+        style={{
+          background:
+            "linear-gradient(to right, rgba(var(--bg-base-rgb), 0.92), rgba(var(--bg-base-rgb), 0.56), transparent)",
+        }}
+      />
+      <div
+        className="pointer-events-none absolute inset-y-0 right-0 w-14 sm:w-24"
+        style={{
+          background:
+            "linear-gradient(to left, rgba(var(--bg-base-rgb), 0.92), rgba(var(--bg-base-rgb), 0.56), transparent)",
+        }}
+      />
     </div>
   );
 }
@@ -532,16 +648,6 @@ export default function LandingPage() {
                     >
                       {t(path.difficultyKey)}
                     </span>
-                    <span
-                      className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-medium"
-                      style={{
-                        color: "var(--text-purple)",
-                        background: "rgba(153,69,255,0.08)",
-                        border: "1px solid rgba(153,69,255,0.2)",
-                      }}
-                    >
-                      {t("common.demo")}
-                    </span>
                   </div>
                   <h3
                     className="font-semibold text-base mb-2"
@@ -550,7 +656,7 @@ export default function LandingPage() {
                     {t(path.titleKey)}
                   </h3>
                   <p
-                    className="text-sm mb-5 leading-relaxed"
+                    className="text-sm mb-5 leading-relaxed min-h-[3.5rem]"
                     style={{ color: "var(--text-secondary)" }}
                   >
                     {t(path.descriptionKey)}
@@ -730,60 +836,9 @@ export default function LandingPage() {
             </div>
           </FadeInSection>
 
-          <div className="grid gap-6 sm:grid-cols-3">
-            {TESTIMONIALS.map((item, i) => (
-              <FadeInSection key={item.id} delay={i * 0.1}>
-                <SpotlightCard className="rounded-2xl" spotlightColor={`${item.color}66`}>
-                  <div
-                    className="rounded-2xl p-6 h-full flex flex-col transition-all duration-300"
-                    style={{
-                      background: "rgba(255,255,255,0.03)",
-                      border: "1px solid var(--border-subtle)",
-                    }}
-                    onMouseEnter={(e) => {
-                      const el = e.currentTarget as HTMLElement;
-                      el.style.transform = "translateY(-4px)";
-                      el.style.borderColor = `${item.color}66`;
-                      el.style.background =
-                        "linear-gradient(135deg, rgba(153,69,255,0.13) 0%, rgba(25,251,155,0.08) 55%, rgba(0,140,76,0.12) 100%)";
-                    }}
-                    onMouseLeave={(e) => {
-                      const el = e.currentTarget as HTMLElement;
-                      el.style.transform = "translateY(0)";
-                      el.style.borderColor = "var(--border-subtle)";
-                      el.style.background = "rgba(255,255,255,0.03)";
-                    }}
-                  >
-                    <p
-                      className="text-sm leading-relaxed flex-1 mb-5"
-                      style={{ color: "var(--text-secondary)" }}
-                    >
-                      &ldquo;{t(item.quoteKey)}&rdquo;
-                    </p>
-                    <div className="flex items-center gap-3">
-                      <div
-                        className="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold"
-                        style={{ background: `${item.color}20`, color: item.color }}
-                      >
-                        {item.avatar}
-                      </div>
-                      <div>
-                        <div
-                          className="text-sm font-semibold"
-                          style={{ color: "var(--text-primary)" }}
-                        >
-                          {t(item.nameKey)}
-                        </div>
-                        <div className="text-xs" style={{ color: "var(--text-muted)" }}>
-                          {t(item.roleKey)}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </SpotlightCard>
-              </FadeInSection>
-            ))}
-          </div>
+          <FadeInSection delay={0.1}>
+            <TestimonialsMarquee testimonials={TESTIMONIALS} />
+          </FadeInSection>
         </div>
       </section>
 

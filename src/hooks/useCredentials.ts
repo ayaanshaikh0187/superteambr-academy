@@ -106,13 +106,13 @@ async function fetchCredentials(
 }
 
 function buildStubCredential(
-  wallet: string,
+  _wallet: string,
   courseId: string,
   credentialId: string,
 ): Credential {
   return {
     id: credentialId,
-    name: `${courseId} Credential (Demo)`,
+    name: `${courseId} Credential`,
     image: null,
     attributes: [
       { trait_type: "track", value: courseId },

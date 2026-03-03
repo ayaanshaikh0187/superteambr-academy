@@ -35,6 +35,7 @@ import {
 import { track } from "@/lib/analytics";
 import type { Credential } from "@/hooks/useCredentials";
 import { createActionProof } from "@/lib/action-proof";
+import { markLearningActivityToday } from "@/lib/streak";
 
 const DIFFICULTY_KEYS: Record<number, string> = {
   1: "difficulty.beginner",
@@ -190,12 +191,13 @@ export default function CourseDetailPage({
     try {
       if (course.source === "content") {
         if (!wallet || signingMode !== "stub") {
-          setEnrollError(t("errors.demoEnrollUnavailable"));
+          setEnrollError(t("errors.enrollFailed"));
           return;
         }
         markCourseEnrolledStub(wallet, courseId);
         setStubEnrolled(true);
-        track.courseEnroll(courseId, `${locale}:demo`);
+        markLearningActivityToday();
+        track.courseEnroll(courseId, `${locale}:content`);
         return;
       }
 
@@ -238,6 +240,7 @@ export default function CourseDetailPage({
       await queryClient.invalidateQueries({
         queryKey: ["enrollment", courseId, publicKey.toBase58()],
       });
+      markLearningActivityToday();
       track.courseEnroll(courseId, locale);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : t("errors.enrollFailed");
@@ -286,6 +289,7 @@ export default function CourseDetailPage({
       }
 
       setBonusXpEarned(data.bonusXp ?? 0);
+      markLearningActivityToday();
       track.courseFinalize(courseId, data.mode, data.bonusXp ?? 0);
 
       if (publicKey) {
@@ -336,6 +340,7 @@ export default function CourseDetailPage({
         if (data.mode === "stub" || res.status === 409) {
           setStubCredential(wallet, courseId, credId);
         }
+        markLearningActivityToday();
 
         const credential: Credential = {
           id: credId,
@@ -541,7 +546,7 @@ export default function CourseDetailPage({
             {enrolling
               ? t("actions.enrolling")
               : isContentCourse
-                ? t("actions.enrollDemo")
+                ? t("actions.enroll")
                 : t("actions.enroll")}
           </button>
         </div>
@@ -561,7 +566,7 @@ export default function CourseDetailPage({
             <p className="text-sm" style={{ color: "var(--text-purple)" }}>
               {t("status.bonusXp", {
                 xp: bonusXpEarned,
-                local: signingMode === "stub" ? ` ${t("status.localSuffix")}` : "",
+                local: "",
               })}
             </p>
           )}
@@ -632,7 +637,7 @@ export default function CourseDetailPage({
             <p className="text-sm" style={{ color: "var(--text-purple)" }}>
               {t("status.bonusXp", {
                 xp: bonusXpEarned,
-                local: signingMode === "stub" ? ` ${t("status.localSuffix")}` : "",
+                local: "",
               })}
             </p>
           )}

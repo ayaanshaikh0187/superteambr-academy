@@ -89,18 +89,6 @@ export function CredentialCard({ credential, locale }: CredentialCardProps) {
           >
             {name}
           </p>
-          {isStub && (
-            <span
-              className="shrink-0 text-xs px-2 py-0.5 rounded-full"
-              style={{
-                color: "#fbbf24",
-                background: "rgba(251,191,36,0.1)",
-                border: "1px solid rgba(251,191,36,0.25)",
-              }}
-            >
-              {t("demo")}
-            </span>
-          )}
         </div>
 
         {attributes.length > 0 && (

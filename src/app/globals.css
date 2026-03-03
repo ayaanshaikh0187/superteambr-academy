@@ -32,6 +32,7 @@
 
   /* Background layers — dark-first, near-black as Solana brand specifies */
   --bg-base:     #06060a;
+  --bg-base-rgb: 6, 6, 10;
   --bg-surface:  #0f0f16;
   --bg-elevated: #19192a;
   --bg-overlay:  #22223a;
@@ -102,6 +103,7 @@
 /* ── Light theme ─────────────────────────────────────────────────────── */
 :root[data-theme="light"] {
   --bg-base:     #f7f8fb;
+  --bg-base-rgb: 247, 248, 251;
   --bg-surface:  #ffffff;
   --bg-elevated: #f2f4f9;
   --bg-overlay:  #e8edf5;
@@ -370,6 +372,39 @@ h1, h2, h3, h4 {
   animation: float-slow 8s ease-in-out infinite;
 }
 
+/* Continuous testimonial marquee */
+.testimonials-marquee {
+  width: 100%;
+  overflow: hidden;
+}
+
+.testimonials-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: testimonials-marquee 64s linear infinite;
+  will-change: transform;
+}
+
+.testimonials-marquee.group:hover .testimonials-marquee-track {
+  animation-play-state: paused;
+}
+
+.testimonials-marquee-strip {
+  display: flex;
+  gap: 1.25rem;
+  padding-right: 1.25rem;
+  flex-shrink: 0;
+}
+
+@keyframes testimonials-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 /* ── Selection highlight ─────────────────────────────────────────────── */
 ::selection {
   background: rgba(153, 69, 255, 0.3);
@@ -422,6 +457,14 @@ h1, h2, h3, h4 {
   .streak-today,
   .level-up-modal,
   .goal-ring-fill { animation: none !important; transition: none !important; }
+
+  .testimonials-marquee {
+    overflow-x: auto;
+  }
+
+  .testimonials-marquee-track {
+    animation: none !important;
+  }
 }
 
 /* ── Achievement unlock toast ────────────────────────────────────────── */

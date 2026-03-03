@@ -90,22 +90,18 @@ function DifficultyBadge({
       >
         {t(labelKey)}
       </span>
-      <span
-        className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
-        style={{
-          color: source === "onchain" ? "var(--solana-green)" : "#fbbf24",
-          background:
-            source === "onchain"
-              ? "rgba(25,251,155,0.1)"
-              : "rgba(251,191,36,0.1)",
-          border:
-            source === "onchain"
-              ? "1px solid rgba(25,251,155,0.25)"
-              : "1px solid rgba(251,191,36,0.3)",
-        }}
-      >
-        {source === "onchain" ? t("source.onchain") : t("source.demo")}
-      </span>
+      {source === "onchain" && (
+        <span
+          className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
+          style={{
+            color: "var(--solana-green)",
+            background: "rgba(25,251,155,0.1)",
+            border: "1px solid rgba(25,251,155,0.25)",
+          }}
+        >
+          {t("source.onchain")}
+        </span>
+      )}
     </div>
   );
 }
@@ -152,34 +148,16 @@ function CourseCard({
     course.lessonCount > 0 ? (completed / course.lessonCount) * 100 : 0;
   const ctaLabel = isDemoCourse
     ? useStubProgress
-      ? t("card.cta.startDemo")
+      ? t("card.cta.start")
       : t("card.cta.preview")
     : t("card.cta.start");
 
   return (
-    <SpotlightCard className="rounded-xl" spotlightColor="rgba(153, 69, 255, 0.2)">
+    <SpotlightCard className="rounded-xl h-full" spotlightColor="rgba(153, 69, 255, 0.2)">
       <Link
         href={`/courses/${course.courseId}`}
         prefetch={false}
-        className="group block rounded-xl p-5 transition-all duration-200 focus-visible:outline-none hover:-translate-y-0.5"
-        style={{
-          background: "var(--bg-surface)",
-          border: "1px solid var(--border-subtle)",
-          boxShadow: "var(--shadow-card)",
-        }}
-        onMouseEnter={(e) => {
-          const el = e.currentTarget as HTMLElement;
-          el.style.borderColor = "var(--border-purple)";
-          el.style.boxShadow = "var(--shadow-card-hover)";
-          el.style.background =
-            "linear-gradient(135deg, rgba(153,69,255,0.12) 0%, rgba(25,251,155,0.08) 55%, rgba(0,140,76,0.1) 100%)";
-        }}
-        onMouseLeave={(e) => {
-          const el = e.currentTarget as HTMLElement;
-          el.style.borderColor = "var(--border-subtle)";
-          el.style.boxShadow = "var(--shadow-card)";
-          el.style.background = "var(--bg-surface)";
-        }}
+        className="group block h-full rounded-xl p-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--solana-purple)]"
       >
         <div className="flex items-start justify-between gap-3 mb-3">
           <div className="min-w-0">
@@ -307,9 +285,6 @@ export default function CoursesPage() {
         </div>
         <p className="text-base" style={{ color: "var(--text-secondary)" }}>
           {t("description")}
-        </p>
-        <p className="text-xs mt-2" style={{ color: "var(--text-muted)" }}>
-          {t("sourceInfo")}
         </p>
       </div>
 

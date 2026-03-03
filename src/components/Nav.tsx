@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { signOut, useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
@@ -26,23 +26,7 @@ import {
   getProfileBySubject,
   resolveCurrentSubject,
 } from "@/services/IdentityProfileService";
-
-function getNavStreak(): number {
-  if (typeof window === "undefined") return 0;
-  try {
-    const raw = localStorage.getItem("academy_heatmap");
-    if (!raw) return 0;
-    const data: boolean[] = JSON.parse(raw);
-    let count = 0;
-    for (const active of data) {
-      if (active) count++;
-      else break;
-    }
-    return count;
-  } catch {
-    return 0;
-  }
-}
+import { getCurrentStreak, STREAK_UPDATED_EVENT } from "@/lib/streak";
 
 export function Nav() {
   const { connected, publicKey } = useWallet();
@@ -56,7 +40,8 @@ export function Nav() {
   const t = useTranslations("Nav");
   const [mobileOpen, setMobileOpen] = useState(false);
   const [identityVersion, setIdentityVersion] = useState(0);
-  const streak = getNavStreak();
+  const [streak, setStreak] = useState(0);
+  const desktopMenuRef = useRef<HTMLDetailsElement | null>(null);
   const { theme } = useTheme();
   const isDark =
     theme === "dark" ||
@@ -97,6 +82,46 @@ export function Nav() {
     };
   }, []);
 
+  useEffect(() => {
+    function closeDesktopMenuIfOutside(event: MouseEvent) {
+      const menu = desktopMenuRef.current;
+      if (!menu?.open) return;
+      if (event.target instanceof Node && !menu.contains(event.target)) {
+        menu.open = false;
+      }
+    }
+
+    function closeDesktopMenuOnEscape(event: KeyboardEvent) {
+      if (event.key !== "Escape") return;
+      const menu = desktopMenuRef.current;
+      if (!menu?.open) return;
+      menu.open = false;
+    }
+
+    document.addEventListener("mousedown", closeDesktopMenuIfOutside);
+    document.addEventListener("keydown", closeDesktopMenuOnEscape);
+
+    return () => {
+      document.removeEventListener("mousedown", closeDesktopMenuIfOutside);
+      document.removeEventListener("keydown", closeDesktopMenuOnEscape);
+    };
+  }, []);
+
+  useEffect(() => {
+    function syncStreak() {
+      setStreak(getCurrentStreak());
+    }
+
+    syncStreak();
+    window.addEventListener(STREAK_UPDATED_EVENT, syncStreak);
+    window.addEventListener("storage", syncStreak);
+
+    return () => {
+      window.removeEventListener(STREAK_UPDATED_EVENT, syncStreak);
+      window.removeEventListener("storage", syncStreak);
+    };
+  }, []);
+
   void identityVersion;
   const identityProfile = getProfileBySubject(subject);
 
@@ -110,6 +135,7 @@ export function Nav() {
   const stableReturnTo = `/${locale}`;
   const authHref = `/auth?returnTo=${encodeURIComponent(stableReturnTo)}`;
   const authCallbackHref = `/${locale}/auth?returnTo=${encodeURIComponent(stableReturnTo)}`;
+  const socialLinkHref = connected ? "/settings" : authHref;
   const displayIdentity =
     session?.user?.name ||
     session?.user?.email ||
@@ -143,6 +169,20 @@ export function Nav() {
     { href: profileHref, label: t("profile"), active: isActive(profileHref) },
     { href: settingsHref, label: t("settings"), active: isActive(settingsHref) },
   ];
+
+  function closeDesktopMenu() {
+    const menu = desktopMenuRef.current;
+    if (!menu?.open) return;
+    menu.open = false;
+  }
+
+  function closeDesktopMenuDeferred() {
+    if (typeof window === "undefined") {
+      closeDesktopMenu();
+      return;
+    }
+    window.requestAnimationFrame(closeDesktopMenu);
+  }
 
   return (
     <nav
@@ -235,7 +275,7 @@ export function Nav() {
               {t("login")}
             </Link>
           ) : (
-            <details className="hidden md:block relative">
+            <details ref={desktopMenuRef} className="hidden md:block relative">
               <summary
                 className="list-none inline-flex min-h-[40px] cursor-pointer items-center gap-2 rounded-lg px-3 text-sm font-medium"
                 style={{
@@ -281,6 +321,7 @@ export function Nav() {
                     key={link.href}
                     href={link.href}
                     prefetch={false}
+                    onClick={closeDesktopMenu}
                     className="block px-3 py-2.5 text-sm"
                     style={{
                       color: link.active ? "var(--text-primary)" : "var(--text-secondary)",
@@ -298,9 +339,12 @@ export function Nav() {
                     <span className="text-xs" style={{ color: "var(--text-muted)" }}>
                       {t("language")}
                     </span>
-                    <LocaleSwitcher variant="nav" />
+                    <LocaleSwitcher variant="nav" onSwitched={closeDesktopMenu} />
                   </div>
-                  <div className="flex items-center justify-between gap-3">
+                  <div
+                    className="flex items-center justify-between gap-3"
+                    onClick={closeDesktopMenuDeferred}
+                  >
                     <span className="text-xs" style={{ color: "var(--text-muted)" }}>
                       {t("appearance")}
                     </span>
@@ -315,8 +359,9 @@ export function Nav() {
                 </div>
                 {!hasSocialSession && (
                   <Link
-                    href={authHref}
+                    href={socialLinkHref}
                     prefetch={false}
+                    onClick={closeDesktopMenu}
                     className="block px-3 py-2.5 text-xs"
                     style={{
                       color: "var(--text-muted)",
@@ -328,7 +373,10 @@ export function Nav() {
                 )}
                 {hasSocialSession && (
                   <button
-                    onClick={() => signOut({ callbackUrl: authCallbackHref })}
+                    onClick={() => {
+                      closeDesktopMenu();
+                      signOut({ callbackUrl: authCallbackHref });
+                    }}
                     className="w-full flex items-center gap-2 px-3 py-2.5 text-sm"
                     style={{
                       color: "#f87171",
@@ -420,11 +468,11 @@ export function Nav() {
 
                 {!hasSocialSession ? (
                   <MobileNavLink
-                    href={authHref}
-                    active={isActive("/auth")}
+                    href={socialLinkHref}
+                    active={connected ? isActive(settingsHref) : isActive("/auth")}
                     onClick={() => setMobileOpen(false)}
                   >
-                    {t("login")}
+                    {connected ? t("socialOptional") : t("login")}
                   </MobileNavLink>
                 ) : (
                   <button

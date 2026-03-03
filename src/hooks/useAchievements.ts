@@ -9,25 +9,7 @@ import { useSigningMode } from "@/hooks/useSigningMode";
 import { useStubXp } from "@/hooks/useStubXp";
 import { countCompletedLessons, normalizeFlags } from "@/lib/bitmap";
 import { ACHIEVEMENTS, type Achievement } from "@/data/achievements";
-
-/** Loaded from localStorage (heatmap key shared across session) */
-function getCurrentStreak(): number {
-  if (typeof window === "undefined") return 0;
-  try {
-    const raw = localStorage.getItem("academy_heatmap");
-    if (!raw) return 0;
-    const data: boolean[] = JSON.parse(raw);
-    // Demo: count consecutive days from index 0
-    let streak = 0;
-    for (const active of data) {
-      if (active) streak++;
-      else break;
-    }
-    return streak;
-  } catch {
-    return 0;
-  }
-}
+import { getCurrentStreak } from "@/lib/streak";
 
 export interface AchievementState {
   achievement: Achievement;

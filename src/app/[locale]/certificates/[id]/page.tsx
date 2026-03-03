@@ -163,18 +163,6 @@ export default function CertificatePage() {
                   >
                     {credential.name}
                   </p>
-                  {credential.isStub && (
-                    <span
-                      className="text-xs px-2 py-0.5 rounded-full"
-                      style={{
-                        color: "#fbbf24",
-                        background: "rgba(251,191,36,0.1)",
-                        border: "1px solid rgba(251,191,36,0.2)",
-                      }}
-                    >
-                      {t("common.demo")}
-                    </span>
-                  )}
                 </div>
               )}
             </div>

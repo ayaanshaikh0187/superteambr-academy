@@ -3,7 +3,6 @@
 import { useTranslations } from "next-intl";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { signIn, signOut, useSession } from "next-auth/react";
-import * as Sentry from "@sentry/nextjs";
 import {
   Settings,
   Wallet,
@@ -15,8 +14,6 @@ import {
   Copy,
   Check,
   Download,
-  Trash2,
-  AlertTriangle,
 } from "lucide-react";
 import { useSigningMode } from "@/hooks/useSigningMode";
 import { useXpBalance } from "@/hooks/useXpBalance";
@@ -25,6 +22,7 @@ import { useEffect, useState } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { LocaleSwitcher } from "@/components/LocaleSwitcher";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
+import { WalletButton } from "@/components/WalletButton";
 import type { LinkedAccount, SocialAuthInfo } from "@/services/AuthService";
 import { getAuthService } from "@/services/AuthService";
 
@@ -158,11 +156,6 @@ export default function SettingsPage() {
     type: "success" | "error";
     text: string;
   } | null>(null);
-  const [sentryTestState, setSentryTestState] = useState<
-    "idle" | "sending" | "success" | "error"
-  >("idle");
-  const [sentryEventId, setSentryEventId] = useState<string | null>(null);
-  const [sentryError, setSentryError] = useState<string | null>(null);
   const t = useTranslations("Settings");
 
   useEffect(() => {
@@ -313,58 +306,6 @@ export default function SettingsPage() {
       });
     } finally {
       setLinkBusy(false);
-    }
-  }
-
-  async function sendSentrySmokeTest() {
-    if (!process.env.NEXT_PUBLIC_SENTRY_DSN) {
-      setSentryTestState("error");
-      setSentryError(t("dataPrivacy.sentryTest.errors.notConfigured"));
-      return;
-    }
-
-    setSentryTestState("sending");
-    setSentryError(null);
-    setSentryEventId(null);
-
-    try {
-      Sentry.captureException(
-        new Error(`[sentry-smoke-test] client ${new Date().toISOString()}`),
-        {
-          tags: {
-            smoke_test: "true",
-            target: "client",
-          },
-        },
-      );
-
-      const response = await fetch("/api/sentry-test", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ target: "server" }),
-      });
-
-      const payload = (await response.json()) as {
-        ok?: boolean;
-        eventId?: string;
-        error?: string;
-      };
-
-      if (!response.ok || !payload?.ok) {
-        throw new Error(payload?.error || t("dataPrivacy.sentryTest.errors.failed"));
-      }
-
-      setSentryEventId(payload.eventId ?? null);
-      setSentryTestState("success");
-    } catch (error) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : t("dataPrivacy.sentryTest.errors.failed");
-      setSentryError(message);
-      setSentryTestState("error");
     }
   }
 
@@ -580,6 +521,13 @@ export default function SettingsPage() {
 
       <Section title={t("sections.wallet")}>
         <Row
+          label={t("wallet.action.label")}
+          description={t("wallet.action.description")}
+        >
+          <WalletButton />
+        </Row>
+
+        <Row
           label={t("wallet.address.label")}
           description={t("wallet.address.description")}
         >
@@ -696,45 +644,6 @@ export default function SettingsPage() {
 
       <Section title={t("sections.dataPrivacy")}>
         <Row
-          label={t("dataPrivacy.sentryTest.label")}
-          description={t("dataPrivacy.sentryTest.description")}
-        >
-          <div className="flex flex-col items-end gap-1">
-            <button
-              onClick={sendSentrySmokeTest}
-              disabled={sentryTestState === "sending"}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed"
-              style={{
-                background: "var(--bg-elevated)",
-                border: "1px solid var(--border-default)",
-                color: "var(--text-primary)",
-              }}
-              onMouseEnter={(e) =>
-                ((e.currentTarget as HTMLElement).style.borderColor =
-                  "var(--border-subtle)")
-              }
-              onMouseLeave={(e) =>
-                ((e.currentTarget as HTMLElement).style.borderColor =
-                  "var(--border-default)")
-              }
-            >
-              {sentryTestState === "sending"
-                ? t("dataPrivacy.sentryTest.sending")
-                : t("dataPrivacy.sentryTest.button")}
-            </button>
-            {sentryTestState === "success" && sentryEventId ? (
-              <p className="text-xs" style={{ color: "var(--solana-green)" }}>
-                {t("dataPrivacy.sentryTest.success", { eventId: sentryEventId.slice(0, 10) })}
-              </p>
-            ) : null}
-            {sentryTestState === "error" && sentryError ? (
-              <p className="text-xs" style={{ color: "#f87171" }}>
-                {sentryError}
-              </p>
-            ) : null}
-          </div>
-        </Row>
-        <Row
           label={t("dataPrivacy.export.label")}
           description={t("dataPrivacy.export.description")}
           last
@@ -757,62 +666,6 @@ export default function SettingsPage() {
           >
             <Download size={14} aria-hidden="true" />
             {t("dataPrivacy.export.button")}
-          </button>
-        </Row>
-      </Section>
-
-      <Section title={t("sections.dangerZone")}>
-        <Row
-          label={t("danger.clearCache.label")}
-          description={t("danger.clearCache.description")}
-        >
-          <button
-            onClick={() => {
-              if (typeof window !== "undefined") {
-                localStorage.clear();
-                window.location.reload();
-              }
-            }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-            style={{
-              background: "rgba(239, 68, 68, 0.1)",
-              border: "1px solid rgba(239, 68, 68, 0.3)",
-              color: "#ef4444",
-            }}
-            onMouseEnter={(e) =>
-              ((e.currentTarget as HTMLElement).style.background =
-                "rgba(239, 68, 68, 0.2)")
-            }
-            onMouseLeave={(e) =>
-              ((e.currentTarget as HTMLElement).style.background =
-                "rgba(239, 68, 68, 0.1)")
-            }
-          >
-            <Trash2 size={14} aria-hidden="true" />
-            {t("danger.clearCache.button")}
-          </button>
-        </Row>
-        <Row
-          label={t("danger.resetProgress.label")}
-          description={t("danger.resetProgress.description")}
-          last
-        >
-          <button
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
-            style={{
-              background: "#ef4444",
-              color: "#fff",
-              border: "1px solid #dc2626",
-            }}
-            onMouseEnter={(e) =>
-              ((e.currentTarget as HTMLElement).style.background = "#dc2626")
-            }
-            onMouseLeave={(e) =>
-              ((e.currentTarget as HTMLElement).style.background = "#ef4444")
-            }
-          >
-            <AlertTriangle size={14} aria-hidden="true" />
-            {t("danger.resetProgress.button")}
           </button>
         </Row>
       </Section>

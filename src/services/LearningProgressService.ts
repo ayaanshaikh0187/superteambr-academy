@@ -5,6 +5,7 @@
  * The stub implementation uses localStorage for persistence.
  * Swap the implementation for on-chain calls without changing callers.
  */
+import { getCurrentStreak, getStreakHeatmap, markLearningActivityToday } from "@/lib/streak";
 
 /** ── Types ──────────────────────────────────────────────────────────── */
 export interface EnrollmentProgress {
@@ -115,14 +116,12 @@ export class StubLearningProgressService implements ILearningProgressService {
     if (typeof window === "undefined") {
       return { currentStreak: 0, longestStreak: 0, days: [] };
     }
-    const raw = localStorage.getItem("academy_heatmap");
-    const flags: boolean[] = raw ? JSON.parse(raw) : [];
+    const flags = getStreakHeatmap(70);
     const days: StreakDay[] = flags.map((active, i) => ({
       date: daysAgo(i),
       active,
     }));
-    let currentStreak = 0;
-    for (const d of days) { if (d.active) currentStreak++; else break; }
+    const currentStreak = getCurrentStreak(70);
     let longestStreak = 0;
     let run = 0;
     for (const d of days) {
@@ -146,15 +145,8 @@ export class StubLearningProgressService implements ILearningProgressService {
 
   async recordDailyActivity(wallet: string): Promise<void> {
     if (typeof window === "undefined") return;
-    const today = new Date().toISOString().split("T")[0];
-    const key = `academy_last_active_${wallet.slice(0, 8)}`;
-    if (localStorage.getItem(key) === today) return; // already recorded today
-    localStorage.setItem(key, today);
-    // Update heatmap
-    const raw = localStorage.getItem("academy_heatmap");
-    const flags: boolean[] = raw ? JSON.parse(raw) : new Array(70).fill(false);
-    flags[0] = true; // mark today active
-    localStorage.setItem("academy_heatmap", JSON.stringify(flags));
+    void wallet;
+    markLearningActivityToday();
   }
 }
 

@@ -48,7 +48,7 @@
       "builtOn": "Construido en Solana"
     },
     "common": {
-      "demo": "Demo"
+      "demo": "Contenido"
     },
     "stats": {
       "activeLearners": "Alumnos Activos",
@@ -138,12 +138,27 @@
       "carlos": {
         "name": "Carlos Mendes",
         "role": "Aprendiz Web3, Rio de Janeiro",
-        "quote": "El playground en navegador me deja practicar Anchor sin setup local."
+        "quote": "El playground en navegador me deja practicar Anchor sin configuracion extra."
       },
       "beatriz": {
         "name": "Beatriz Lima",
         "role": "Investigadora DeFi, Brasilia",
         "quote": "Pase de cero en Solana a desplegar mi primer programa con confianza."
+      },
+      "lucas": {
+        "name": "Lucas Martins",
+        "role": "Ingeniero de Smart Contracts, Recife",
+        "quote": "El flujo de lecciones refleja trabajo real. Lance mi primer proyecto Anchor en un fin de semana."
+      },
+      "marina": {
+        "name": "Marina Costa",
+        "role": "Builder Full-Stack, Belo Horizonte",
+        "quote": "Tener XP, credenciales y progreso en un solo lugar hizo mas facil mantener mi racha."
+      },
+      "rafael": {
+        "name": "Rafael Pereira",
+        "role": "Entusiasta de Seguridad, Curitiba",
+        "quote": "El feedback de los desafios es rapido y practico, asi puedo iterar sin perder ritmo."
       }
     },
     "ecosystem": {
@@ -227,11 +242,15 @@
         "description": "Como se registran las lecciones completadas",
         "values": {
           "onchain": "On-chain",
-          "stub": "Stub (Demo)"
+          "stub": "Stub (Contenido)"
         }
       },
-      "disconnectNote": "Para desconectar, usa el boton de wallet en la barra de navegacion.",
-      "connectNote": "Conecta una billetera para habilitar acciones on-chain."
+      "disconnectNote": "Puedes desconectar cuando quieras usando el boton de wallet de arriba.",
+      "connectNote": "Conecta una billetera para habilitar acciones on-chain.",
+      "action": {
+        "label": "Acceso de Wallet",
+        "description": "Conecta, cambia o desconecta tu wallet desde aqui"
+      }
     },
     "stats": {
       "totalXp": {
@@ -251,7 +270,7 @@
       },
       "language": {
         "label": "Idioma",
-        "description": "Idioma de lista de espera (Demo)",
+        "description": "Idioma de lista de espera (Contenido)",
         "selectAria": "Seleccionar idioma",
         "options": {
           "enUS": "Ingles (US)",
@@ -280,13 +299,13 @@
     },
     "danger": {
       "clearCache": {
-        "label": "Limpiar Cache Local",
-        "description": "Limpia datos demo, perfiles en cache y datos locales de racha",
+        "label": "Limpiar Cache Contenido",
+        "description": "Limpia datos contenido, perfiles en cache y datos locales de racha",
         "button": "Limpiar Cache"
       },
       "resetProgress": {
         "label": "Restablecer Progreso",
-        "description": "Elimina permanentemente el progreso demo. No se puede deshacer.",
+        "description": "Elimina permanentemente el progreso contenido. No se puede deshacer.",
         "button": "Restablecer Progreso"
       }
     },
@@ -312,7 +331,7 @@
         "description": "Como se carga actualmente el contenido de cursos/lecciones",
         "values": {
           "sanityFallback": "Sanity + fallback",
-          "localJson": "JSON local"
+          "localJson": "JSON contenido"
         }
       },
       "courseCount": {
@@ -366,15 +385,15 @@
   "Courses": {
     "title": "Explorar Cursos",
     "description": "Gana XP soulbound y credenciales verificables en Solana.",
-    "sourceInfo": "Los cursos on-chain usan inscripcion firmada por wallet. Los cursos demo permiten inscripcion local en modo de firma Demo.",
+    "sourceInfo": "Los cursos on-chain usan inscripcion firmada por wallet. Los cursos de CMS usan progreso de contenido.",
     "sourceFilters": {
       "all": "Todas las Fuentes",
       "onchain": "On-chain",
-      "demo": "Demo"
+      "demo": "Contenido"
     },
     "source": {
       "onchain": "On-chain",
-      "demo": "Contenido Demo"
+      "demo": "Contenido"
     },
     "filters": {
       "all": "Todos",
@@ -414,7 +433,7 @@
       "cta": {
         "totalXp": "{xp} XP total",
         "start": "Iniciar ->",
-        "startDemo": "Iniciar Demo ->",
+        "startDemo": "Iniciar ->",
         "preview": "Solo vista previa"
       }
     }
@@ -447,7 +466,7 @@
   "Dashboard": {
     "title": "Panel",
     "common": {
-      "demo": "Demo"
+      "demo": "Contenido"
     },
     "empty": {
       "title": "Conecta tu wallet",
@@ -461,7 +480,7 @@
       "recentActivity": "Actividad Reciente"
     },
     "xp": {
-      "localDemo": "XP Local (Demo)",
+      "localDemo": "XP",
       "total": "XP Total",
       "level": "Nivel",
       "levelShort": "Nv {level}",
@@ -497,7 +516,7 @@
       "browseAll": "Ver todo ->",
       "done": "Hecho",
       "sourceOnchain": "On-chain",
-      "sourceDemo": "Demo"
+      "sourceDemo": "Contenido"
     },
     "achievements": {
       "title": "Logros",
@@ -528,7 +547,7 @@
       "enrollmentsLoad": "Error al cargar inscripciones."
     },
     "common": {
-      "demo": "Demo"
+      "demo": "Contenido"
     },
     "visibility": {
       "public": "Publico",
@@ -553,14 +572,14 @@
       "websitePlaceholder": "https://..."
     },
     "xp": {
-      "localDemo": "XP Local (Demo)",
+      "localDemo": "XP",
       "total": "XP Total",
       "onchainLabel": "On-chain: {amount} XP",
       "level": "Nivel",
       "levelShort": "Nv {level}",
       "nextLevel": "Nv {next} - {xp} XP",
       "progressToNext": "{pct}% para el siguiente nivel",
-      "demoNote": "Modo demo - XP guardado localmente y no on-chain.",
+      "demoNote": "El progreso se muestra en tu perfil y dashboard.",
       "empty": "Aun no tienes XP. Completa una leccion para ganar tus primeros tokens XP."
     },
     "skillRadar": {
@@ -593,7 +612,7 @@
   "CourseDetail": {
     "errors": {
       "enrollFailed": "Fallo al inscribirse",
-      "demoEnrollUnavailable": "La inscripcion demo solo esta disponible en modo de firma Stub.",
+      "demoEnrollUnavailable": "La inscripcion no esta disponible con el modo de firma actual.",
       "prerequisiteNotMet": "Debes completar primero el curso prerequisito.",
       "courseInactive": "Este curso ya no esta activo.",
       "finalizeFailed": "Fallo al finalizar. Intenta nuevamente.",
@@ -615,15 +634,15 @@
     "status": {
       "connectWallet": "Conecta tu wallet para inscribirte en este curso",
       "contentPreviewTitle": "Curso en vista previa",
-      "contentPreviewBody": "Este curso se carga desde CMS/contenido local y aun no esta disponible como curso de inscripcion on-chain en devnet.",
+      "contentPreviewBody": "Este curso se carga desde contenido de CMS y aun no esta disponible como curso de inscripcion on-chain en devnet.",
       "onchainContentPendingTitle": "El contenido de lecciones aun no esta publicado",
       "onchainContentPendingBody": "Este curso on-chain existe en devnet, pero todavia no tiene un paquete de contenido de lecciones vinculado.",
       "completed": "Curso completado!",
-      "bonusXp": "+{xp} XP bonus{local}",
-      "localSuffix": "(local)",
+      "bonusXp": "+{xp} XP bonus{contenido}",
+      "localSuffix": "",
       "credentialLabel": "Credencial:",
       "viewOnExplorer": "Ver en Explorer",
-      "localCredential": "Credencial local obtenida (modo demo) - visible en tu perfil.",
+      "localCredential": "Credencial obtenida y visible en tu perfil.",
       "allLessonsComplete": "Todas las lecciones completas!",
       "finalizePrompt": "Finaliza para ganar XP bonus y desbloquear tu credencial NFT.",
       "inProgress": "En progreso",
@@ -633,7 +652,7 @@
     "actions": {
       "enrolling": "Inscribiendo...",
       "enroll": "Inscribirse - 0.001 SOL (reembolsable)",
-      "enrollDemo": "Inscripcion Demo",
+      "enrollDemo": "Inscribirse",
       "minting": "Mintando...",
       "claimCredential": "Reclamar Credential NFT ->",
       "finalizing": "Finalizando...",
@@ -658,7 +677,7 @@
     },
     "credential": {
       "name": "Credential de {courseId}",
-      "stubName": "Credential de {courseId} (Demo)"
+      "stubName": "Credential de {courseId}"
     }
   },
   "LessonView": {
@@ -678,7 +697,7 @@
       "openExternal": "Abrir en nueva pestana"
     },
     "missing": {
-      "intro": "Contenido de la leccion no encontrado localmente para este curso",
+      "intro": "No se encontro contenido de la leccion en CMS para este curso",
       "publishHint": "Publica el contenido de lecciones de este curso en CMS o agrega un paquete de contenido antes de comenzar.",
       "addAlias": "Agrega un alias en",
       "outro": "para mapearlo al contenido existente, o agrega un nuevo JSON de contenido."
@@ -732,13 +751,13 @@
       }
     },
     "status": {
-      "demoMode": "Modo demo - XP registrado localmente, no on-chain.",
+      "demoMode": "Progreso registrado correctamente.",
       "complete": "Completada",
       "connectWallet": "Conecta tu wallet para enviar y ganar XP.",
       "enrollCourseLink": "Inscribete en este curso",
       "enrollCourseSuffix": "para enviar lecciones y ganar XP.",
       "lessonComplete": "Leccion {index} completada!",
-      "localSuffix": "(local)",
+      "localSuffix": "",
       "addedToBalance": "agregado a tu balance",
       "runUnsupported": "El runner de pruebas esta disponible solo para desafios en JavaScript/TypeScript. Modo actual del editor: {language}.",
       "runnerUnavailableTitle": "Runner no disponible para el lenguaje actual",
@@ -751,7 +770,7 @@
   },
   "CertificateView": {
     "common": {
-      "demo": "Demo"
+      "demo": "Contenido"
     },
     "actions": {
       "backToProfile": "Volver al perfil",
@@ -807,14 +826,14 @@
   },
   "CredentialCard": {
     "placeholder": "Credential NFT",
-    "demo": "Demo",
+    "demo": "Contenido",
     "viewExplorer": "Ver en Explorer ->"
   },
   "CredentialModal": {
     "unlocked": "Logro Desbloqueado",
     "earned": "Credencial Obtenida!",
     "closeAria": "Cerrar modal",
-    "localDemo": "Credencial Local (Demo)",
+    "localDemo": "Credencial",
     "viewExplorer": "Ver en Explorer ->",
     "continue": "Continuar Aprendiendo"
   },

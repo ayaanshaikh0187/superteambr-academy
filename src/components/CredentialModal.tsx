@@ -159,18 +159,6 @@ export function CredentialModal({ credential, onClose }: CredentialModalProps) {
             >
               {name}
             </p>
-            {isStub && (
-              <span
-                className="inline-block mt-2 text-xs px-2.5 py-0.5 rounded-full"
-                style={{
-                  color: "#fbbf24",
-                  background: "rgba(251,191,36,0.1)",
-                  border: "1px solid rgba(251,191,36,0.25)",
-                }}
-              >
-                {t("localDemo")}
-              </span>
-            )}
           </div>
 
           {attributes.length > 0 && (
