@@ -3,7 +3,6 @@
   "buildCommand": "npm run build",
   "outputDirectory": ".next",
   "framework": "nextjs",
-  "regions": ["iad1", "gru1"],
   "headers": [
     {
       "source": "/(.*)",
